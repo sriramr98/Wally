@@ -1,6 +1,6 @@
 # Wallly
 
-A simplistic wallpaper application powered by unsplash.com
+A simplistic wallpaper application powered by [Unsplash](unsplash.com)
 
 This application contains some of the most beautiful and artistic photos taken by some of the world's best photographers and donated to the community for free.
 
