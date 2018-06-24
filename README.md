@@ -1,4 +1,4 @@
-# Wallly
+# Wally
 
 A simplistic wallpaper application powered by [Unsplash](unsplash.com)
 
