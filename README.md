@@ -17,3 +17,7 @@ This application contains some of the most beautiful and artistic photos taken b
 * Download photo
 * Dark Theme
 * Photo Collections
+
+# Screenshots:
+
+<img src="https://github.com/sriramr98/Wallly/blob/dev/Screenshots/Screenshot_1.jpg" width="300" />
