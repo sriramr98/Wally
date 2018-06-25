@@ -13,11 +13,16 @@ import org.jetbrains.anko.toast
 
 class MainActivity : AppCompatActivity() {
 
+    private var currentFragmentTag = "HOME"
+
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_home -> {
-                supportActionBar?.setTitle(R.string.title_home)
-                PhotosListFragment.instantiate().show(true, PhotosListFragment.TAG)
+                if (currentFragmentTag != "HOME") {
+                    supportActionBar?.setTitle(R.string.title_home)
+                    PhotosListFragment.instantiate().show(true, PhotosListFragment.TAG)
+                    currentFragmentTag = "HOME"
+                }
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dashboard -> {
