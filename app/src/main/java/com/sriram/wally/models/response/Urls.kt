@@ -1,7 +1,10 @@
 package com.sriram.wally.models.response
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Urls(
 
         @field:SerializedName("small")
@@ -18,4 +21,4 @@ data class Urls(
 
         @field:SerializedName("full")
         val full: String? = null
-)
+) : Parcelable

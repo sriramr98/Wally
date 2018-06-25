@@ -17,6 +17,7 @@ class PhotoListAdapter(context: Context, val picasso: Picasso) : RecyclerView.Ad
 
     private val inflater = LayoutInflater.from(context)
     private val images = arrayListOf<PhotoListResponse>()
+    private var mListener: PhotoListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = inflater.inflate(R.layout.item_image, parent, false)
@@ -37,7 +38,22 @@ class PhotoListAdapter(context: Context, val picasso: Picasso) : RecyclerView.Ad
         this.images.addAll(images)
     }
 
+    fun onItemClickListener(listener: PhotoListener) {
+        mListener = listener
+    }
+
+    interface PhotoListener {
+        fun onPhotoClicked(photo: PhotoListResponse)
+    }
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        init {
+            itemView.setOnClickListener {
+                mListener?.onPhotoClicked(images[adapterPosition])
+            }
+        }
+
         fun bind(image: PhotoListResponse) {
             Logger.i(image.urls?.regular ?: "No regular image")
             picasso.load(image.urls?.regular)

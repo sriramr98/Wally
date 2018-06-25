@@ -1,11 +1,11 @@
 package com.sriram.wally.models.response
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class PhotoListResponse(
-
-        @field:SerializedName("current_user_collections")
-        val currentUserCollections: List<CurrentUserCollectionsItem?>? = null,
 
         @field:SerializedName("color")
         val color: String? = null,
@@ -15,9 +15,6 @@ data class PhotoListResponse(
 
         @field:SerializedName("description")
         val description: String? = null,
-
-        @field:SerializedName("liked_by_user")
-        val likedByUser: Boolean? = null,
 
         @field:SerializedName("urls")
         val urls: Urls? = null,
@@ -42,4 +39,4 @@ data class PhotoListResponse(
 
         @field:SerializedName("likes")
         val likes: Int? = null
-)
+): Parcelable

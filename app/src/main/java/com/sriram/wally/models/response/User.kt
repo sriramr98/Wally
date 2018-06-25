@@ -1,7 +1,10 @@
 package com.sriram.wally.models.response
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class User(
 
         @field:SerializedName("total_photos")
@@ -42,4 +45,4 @@ data class User(
 
         @field:SerializedName("username")
         val username: String? = null
-)
+) : Parcelable

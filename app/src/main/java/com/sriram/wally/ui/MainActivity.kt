@@ -7,15 +7,11 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import com.sriram.wally.R
-import com.sriram.wally.networking.WallyService
 import com.sriram.wally.ui.home.PhotosListFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
-import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
-
-    private val wallyService by inject<WallyService>()
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {

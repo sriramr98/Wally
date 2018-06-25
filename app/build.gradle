@@ -23,6 +23,9 @@ android {
             it.buildConfigField 'String', 'UNSPLASH_SECRET_KEY', UNSPLASH_SECRET_KEY
         }
     }
+    androidExtensions {
+        experimental = true
+    }
 }
 
 dependencies {
@@ -73,6 +76,9 @@ dependencies {
     implementation "org.jetbrains.anko:anko:$anko_version"
     // Appcompat-v7 (only Anko Commons)
     implementation "org.jetbrains.anko:anko-appcompat-v7-commons:$anko_version"
+
+    // photo view
+    implementation "com.github.chrisbanes:PhotoView:$photo_view_version"
 
     testImplementation "junit:junit:4.12"
     androidTestImplementation "com.android.support.test:runner:1.0.2"

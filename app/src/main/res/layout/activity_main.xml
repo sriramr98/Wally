@@ -28,9 +28,9 @@
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="0dp"
         android:layout_marginStart="0dp"
+        app:itemIconTint="@color/black"
+        app:itemTextColor="@color/black"
         android:background="?android:attr/windowBackground"
-        app:itemIconTint="@android:color/black"
-        app:itemTextColor="@android:color/black"
         app:menu="@menu/navigation" />
 
 </RelativeLayout>
