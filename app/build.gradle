@@ -80,6 +80,12 @@ dependencies {
     // photo view
     implementation "com.github.chrisbanes:PhotoView:$photo_view_version"
 
+    //Paging
+    implementation "android.arch.paging:runtime:1.0.0"
+
+    // fab menu
+    implementation "com.leinardi.android:speed-dial:1.0.1"
+
     testImplementation "junit:junit:4.12"
     androidTestImplementation "com.android.support.test:runner:1.0.2"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.2"

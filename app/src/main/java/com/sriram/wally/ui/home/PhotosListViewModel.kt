@@ -38,7 +38,6 @@ class PhotosListViewModel(val networkRepo: NetworkRepo) : ViewModel() {
                     } else {
                         // failure
                         val items = photosData.value?.items
-                        items?.addAll(it)
                         photosData.value = NetworkResponse(NetworkStatus.FAILURE, items
                                 ?: arrayListOf())
                     }

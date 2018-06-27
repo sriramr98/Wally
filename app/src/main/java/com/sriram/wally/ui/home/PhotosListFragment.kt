@@ -54,7 +54,7 @@ class PhotosListFragment : Fragment() {
         mViewModel.getPhotosData().observe(this, Observer {
             if (it == null || it.status == NetworkStatus.LOADING) {
                 toggleLoading(true)
-            } else if (it.status == NetworkStatus.FAILURE) {
+            } else if (it.status == NetworkStatus.FAILURE && it.items.isEmpty()) {
                 showError("Error getting photos. Please try again")
             } else if (it.status == NetworkStatus.SUCCESS) {
                 showSuccess(it.items)
@@ -72,7 +72,9 @@ class PhotosListFragment : Fragment() {
 
         })
 
+
     }
+
 
     private fun showSuccess(images: ArrayList<PhotoListResponse>) {
         toggleLoading(false)

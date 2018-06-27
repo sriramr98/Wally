@@ -39,4 +39,4 @@ data class PhotoListResponse(
 
         @field:SerializedName("likes")
         val likes: Int? = null
-): Parcelable
+) : Parcelable

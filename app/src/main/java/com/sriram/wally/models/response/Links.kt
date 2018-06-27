@@ -7,8 +7,14 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Links(
 
+        @field:SerializedName("followers")
+        val followers: String? = null,
+
         @field:SerializedName("portfolio")
         val portfolio: String? = null,
+
+        @field:SerializedName("following")
+        val following: String? = null,
 
         @field:SerializedName("self")
         val self: String? = null,
@@ -21,4 +27,4 @@ data class Links(
 
         @field:SerializedName("likes")
         val likes: String? = null
-) : Parcelable
+): Parcelable

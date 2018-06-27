@@ -15,6 +15,6 @@ object SharedPrefUtils {
     }
 
     fun getPhotosOrder(): String {
-        return mPrefs.getString(PHOTOS_ORDER, Constants.PHOTOS_ORDER_LATEST)
+        return mPrefs.getString(PHOTOS_ORDER, Constants.PHOTOS_ORDER_POPULAR)
     }
 }

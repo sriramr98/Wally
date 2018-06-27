@@ -34,7 +34,7 @@ fun getHeaderInterceptor(): HeaderInterceptor {
 fun getCache(context: Context): Cache {
     val cacheFile = File(context.cacheDir, "okhttp-cache")
 
-    return Cache(cacheFile, 10 * 1000 * 1000) // 10 MB Cache
+    return Cache(cacheFile, 100 * 1000 * 1000) // 100 MB Cache // don't judge. We get a lot of images
 }
 
 fun getRetrofit(okHttpClient: OkHttpClient, gsonConverterFactory: GsonConverterFactory, rxAdapter: RxJava2CallAdapterFactory): Retrofit {
