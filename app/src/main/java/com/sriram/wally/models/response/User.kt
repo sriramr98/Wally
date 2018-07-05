@@ -38,5 +38,8 @@ data class User(
         val portfolioUrl: String? = null,
 
         @field:SerializedName("username")
-        val username: String? = null
+        val username: String? = null,
+
+        @field:SerializedName("profile_image")
+        val profileImages: ProfileImage? = null
 ) : Parcelable

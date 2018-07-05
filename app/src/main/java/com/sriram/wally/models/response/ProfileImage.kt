@@ -1,7 +1,10 @@
 package com.sriram.wally.models.response
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class ProfileImage(
 
         @field:SerializedName("small")
@@ -12,4 +15,4 @@ data class ProfileImage(
 
         @field:SerializedName("medium")
         val medium: String? = null
-)
+) : Parcelable

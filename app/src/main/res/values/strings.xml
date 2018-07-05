@@ -12,4 +12,6 @@
     <string name="download_images_channel_description">This channel is responsible for notifying about events when an Image download is requested</string>
     <string name="downloading_image_title">Downloading Image</string>
     <string name="downloading_image_desc">This might take some time depending on your network connection speed and internal storage</string>
+    <string name="downloading">Downloading</string>
+    <string name="img_artist">Image of the artist</string>
 </resources>

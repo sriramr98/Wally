@@ -1,11 +1,14 @@
 package com.sriram.wally.models.response
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class CurrentUserCollectionsItem(
 
         @field:SerializedName("cover_photo")
-        val coverPhoto: Any? = null,
+        val coverPhoto: String? = null,
 
         @field:SerializedName("updated_at")
         val updatedAt: String? = null,
@@ -20,8 +23,5 @@ data class CurrentUserCollectionsItem(
         val title: String? = null,
 
         @field:SerializedName("published_at")
-        val publishedAt: String? = null,
-
-        @field:SerializedName("user")
-        val user: Any? = null
-)
+        val publishedAt: String? = null
+) : Parcelable

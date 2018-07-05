@@ -1,7 +1,10 @@
 package com.sriram.wally.models.response
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class PhotoDetailResponse(
 
         @field:SerializedName("current_user_collections")
@@ -51,4 +54,4 @@ data class PhotoDetailResponse(
 
         @field:SerializedName("exif")
         val exif: Exif? = null
-)
+) : Parcelable

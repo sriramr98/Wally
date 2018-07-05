@@ -13,8 +13,8 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import com.sriram.wally.R
 import com.sriram.wally.core.WallyService
-import com.sriram.wally.db.ImagesRepo
 import com.sriram.wally.models.response.PhotoListResponse
+import com.sriram.wally.ui.InfoBottomSheet
 import com.sriram.wally.utils.Logger
 import com.sriram.wally.utils.isConnectedToNetwork
 import com.sriram.wally.utils.isExternalStorageWritable
@@ -34,7 +34,6 @@ class ImageDetailActivity : AppCompatActivity() {
 
     private val picasso by inject<Picasso>()
     lateinit var photo: PhotoListResponse
-    private val imagesRepo by inject<ImagesRepo>()
     private val mViewModel by viewModel<ImageDetailViewModel>()
 
     private lateinit var mDialog: Dialog
@@ -77,27 +76,16 @@ class ImageDetailActivity : AppCompatActivity() {
             when (it.id) {
                 R.id.fab_download -> {
                     // result is handled in the live data callback below
-                    if (isExternalStorageWritable()) {
-                        if (isConnectedToNetwork(this@ImageDetailActivity)) {
-                            val downloadService = intentFor<WallyService>(WallyService.EXTRA_IMAGE_ID to mViewModel.getId())
-                            downloadService.action = WallyService.ACTION_DOWNLOAD_IMAGE
-                            startService(downloadService)
-
-                            toast("Your image will be downloaded in the background")
-                        } else {
-                            toast("No internet connection detected. Please try again")
-                        }
-                    } else {
-                        toast("Error cannot find external storage to download images")
-                    }
+                    downloadImage(false)
                     false // true to keep the Speed Dial open
                 }
                 R.id.fab_info -> {
-                    toast("More info!")
+                    val infoSheet = InfoBottomSheet.instantiate(mViewModel.imageData)
+                    infoSheet.show(supportFragmentManager, InfoBottomSheet.TAG)
                     false
                 }
                 R.id.fab_set_wallpaper -> {
-                    toast("Wallpaper!")
+                    setWallpaper()
                     false
                 }
                 else -> false
@@ -107,6 +95,27 @@ class ImageDetailActivity : AppCompatActivity() {
 
 //        tv_user_name.text = "By ${photo.user?.name ?: photo.user?.username ?: "N/A"}"
 
+    }
+
+    private fun setWallpaper() {
+        // true downloads the image and sets as wallpaper but does not save it to file
+        downloadImage(true)
+    }
+
+    private fun downloadImage(setWallpaper: Boolean) {
+        if (isExternalStorageWritable()) {
+            if (isConnectedToNetwork(this)) {
+                val downloadService = intentFor<WallyService>(WallyService.EXTRA_IMAGE_ID to mViewModel.getId(), WallyService.EXTRA_SET_WALLPAPER to setWallpaper)
+                downloadService.action = WallyService.ACTION_DOWNLOAD_IMAGE
+                startService(downloadService)
+
+                toast("Your image will be downloaded in the background")
+            } else {
+                toast("No internet connection detected. Please try again")
+            }
+        } else {
+            toast("Error cannot find external storage to download images")
+        }
     }
 
     private fun setupFabMenu() {

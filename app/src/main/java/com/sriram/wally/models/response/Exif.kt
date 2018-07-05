@@ -1,7 +1,10 @@
 package com.sriram.wally.models.response
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Exif(
 
         @field:SerializedName("exposure_time")
@@ -21,4 +24,4 @@ data class Exif(
 
         @field:SerializedName("make")
         val make: String? = null
-)
+) : Parcelable

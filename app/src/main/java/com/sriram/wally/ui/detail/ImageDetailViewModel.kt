@@ -35,4 +35,5 @@ class ImageDetailViewModel(private val networkRepo: NetworkRepo) : ViewModel() {
     fun getId(): String? {
         return imageData.id
     }
+
 }
