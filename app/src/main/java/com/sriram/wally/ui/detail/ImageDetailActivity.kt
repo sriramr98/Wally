@@ -2,9 +2,6 @@ package com.sriram.wally.ui.detail
 
 import android.R.attr.uiOptions
 import android.app.Dialog
-import android.arch.lifecycle.Observer
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
@@ -14,17 +11,14 @@ import android.view.View
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
 import com.sriram.wally.R
 import com.sriram.wally.core.WallyService
 import com.sriram.wally.db.ImagesRepo
-import com.sriram.wally.models.NetworkStatus
 import com.sriram.wally.models.response.PhotoListResponse
 import com.sriram.wally.utils.Logger
+import com.sriram.wally.utils.isConnectedToNetwork
 import com.sriram.wally.utils.isExternalStorageWritable
-import com.sriram.wally.utils.saveToFile
 import kotlinx.android.synthetic.main.activity_image_detail.*
-import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.toast
 import org.koin.android.architecture.ext.viewModel
@@ -84,10 +78,15 @@ class ImageDetailActivity : AppCompatActivity() {
                 R.id.fab_download -> {
                     // result is handled in the live data callback below
                     if (isExternalStorageWritable()) {
-                        val downloadService = intentFor<WallyService>(WallyService.EXTRA_IMAGE_ID to mViewModel.getId())
-                        downloadService.action = WallyService.ACTION_DOWNLOAD_IMAGE
-                        startService(downloadService)
-                        toast("Your image will be downloaded in the background")
+                        if (isConnectedToNetwork(this@ImageDetailActivity)) {
+                            val downloadService = intentFor<WallyService>(WallyService.EXTRA_IMAGE_ID to mViewModel.getId())
+                            downloadService.action = WallyService.ACTION_DOWNLOAD_IMAGE
+                            startService(downloadService)
+
+                            toast("Your image will be downloaded in the background")
+                        } else {
+                            toast("No internet connection detected. Please try again")
+                        }
                     } else {
                         toast("Error cannot find external storage to download images")
                     }
