@@ -72,7 +72,6 @@ class PhotosListFragment : Fragment() {
 
         })
 
-
     }
 
 

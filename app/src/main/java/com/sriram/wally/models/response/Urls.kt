@@ -21,4 +21,4 @@ data class Urls(
 
         @field:SerializedName("full")
         val full: String? = null
-): Parcelable
+) : Parcelable

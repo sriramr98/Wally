@@ -1,6 +1,10 @@
 package com.sriram.wally.ui.detail
 
 import android.R.attr.uiOptions
+import android.app.Dialog
+import android.arch.lifecycle.Observer
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
@@ -10,11 +14,20 @@ import android.view.View
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import com.squareup.picasso.Target
 import com.sriram.wally.R
+import com.sriram.wally.core.WallyService
+import com.sriram.wally.db.ImagesRepo
+import com.sriram.wally.models.NetworkStatus
 import com.sriram.wally.models.response.PhotoListResponse
 import com.sriram.wally.utils.Logger
+import com.sriram.wally.utils.isExternalStorageWritable
+import com.sriram.wally.utils.saveToFile
 import kotlinx.android.synthetic.main.activity_image_detail.*
+import org.jetbrains.anko.indeterminateProgressDialog
+import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.toast
+import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
 import java.lang.Exception
 
@@ -26,6 +39,11 @@ class ImageDetailActivity : AppCompatActivity() {
     }
 
     private val picasso by inject<Picasso>()
+    lateinit var photo: PhotoListResponse
+    private val imagesRepo by inject<ImagesRepo>()
+    private val mViewModel by viewModel<ImageDetailViewModel>()
+
+    private lateinit var mDialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +54,9 @@ class ImageDetailActivity : AppCompatActivity() {
             return
         }
 
-        val photo = intent.getParcelableExtra<PhotoListResponse>(PHOTO_EXTRA)
-        if (photo == null) {
-            finish()
-            return
-        }
+        photo = intent.getParcelableExtra(PHOTO_EXTRA)
+
+        mViewModel.loadData(photo.id)
 
         setSupportActionBar(toolbar)
 
@@ -66,7 +82,15 @@ class ImageDetailActivity : AppCompatActivity() {
         fab_menu.setOnActionSelectedListener {
             when (it.id) {
                 R.id.fab_download -> {
-                    toast("Downloading!")
+                    // result is handled in the live data callback below
+                    if (isExternalStorageWritable()) {
+                        val downloadService = intentFor<WallyService>(WallyService.EXTRA_IMAGE_ID to mViewModel.getId())
+                        downloadService.action = WallyService.ACTION_DOWNLOAD_IMAGE
+                        startService(downloadService)
+                        toast("Your image will be downloaded in the background")
+                    } else {
+                        toast("Error cannot find external storage to download images")
+                    }
                     false // true to keep the Speed Dial open
                 }
                 R.id.fab_info -> {
@@ -81,8 +105,8 @@ class ImageDetailActivity : AppCompatActivity() {
             }
         }
 
-//        tv_user_name.text = "By ${photo.user?.name ?: photo.user?.username ?: "N/A"}"
 
+//        tv_user_name.text = "By ${photo.user?.name ?: photo.user?.username ?: "N/A"}"
 
     }
 

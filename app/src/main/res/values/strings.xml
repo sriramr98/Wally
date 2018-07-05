@@ -8,4 +8,8 @@
     <string name="wallpaper">Wallpaper</string>
     <string name="set_wallpaper">Set Wallpaper</string>
     <string name="info">Info</string>
+    <string name="download_images_channel_name">Download Images</string>
+    <string name="download_images_channel_description">This channel is responsible for notifying about events when an Image download is requested</string>
+    <string name="downloading_image_title">Downloading Image</string>
+    <string name="downloading_image_desc">This might take some time depending on your network connection speed and internal storage</string>
 </resources>

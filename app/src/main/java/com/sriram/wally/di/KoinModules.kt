@@ -1,7 +1,10 @@
 package com.sriram.wally.di
 
 import com.sriram.wally.adapters.PhotoListAdapter
+import com.sriram.wally.db.ImagesRepo
+import com.sriram.wally.db.WallyDatabase
 import com.sriram.wally.networking.*
+import com.sriram.wally.ui.detail.ImageDetailViewModel
 import com.sriram.wally.ui.home.PhotosListViewModel
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.koin.androidApplication
@@ -29,5 +32,15 @@ val modules = applicationContext {
     viewModel { PhotosListViewModel(get()) }
     factory { PhotoListAdapter(androidApplication(), get()) }
 
+    /**
+     * Modules for room
+     */
+    bean { WallyDatabase.getWallyDatabase(androidApplication()) }
+    factory { ImagesRepo(get()) }
+
+    /**
+     *  Modules for ImageDetailActivity
+     */
+    viewModel { ImageDetailViewModel(get()) }
 
 }
