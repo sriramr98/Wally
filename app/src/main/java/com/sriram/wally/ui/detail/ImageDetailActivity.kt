@@ -1,7 +1,7 @@
 package com.sriram.wally.ui.detail
 
 import android.R.attr.uiOptions
-import android.app.Dialog
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
@@ -13,6 +13,7 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import com.sriram.wally.R
 import com.sriram.wally.core.WallyService
+import com.sriram.wally.models.ImageModel
 import com.sriram.wally.models.response.PhotoListResponse
 import com.sriram.wally.ui.InfoBottomSheet
 import com.sriram.wally.utils.Logger
@@ -23,20 +24,32 @@ import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.toast
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
+import java.io.File
 import java.lang.Exception
 
 
 class ImageDetailActivity : AppCompatActivity() {
 
     companion object {
+        const val ACTION_IMAGE_URL = "action-image-url"
+        const val ACTION_IMAGE_FILE = "action-image-file"
         const val PHOTO_EXTRA = "photo_extra"
     }
 
     private val picasso by inject<Picasso>()
-    lateinit var photo: PhotoListResponse
     private val mViewModel by viewModel<ImageDetailViewModel>()
 
-    private lateinit var mDialog: Dialog
+    private val onImageLoaded = object : Callback {
+        override fun onSuccess() {
+            progress_bar.visibility = View.GONE
+        }
+
+        override fun onError(e: Exception?) {
+            progress_bar.visibility = View.GONE
+            e?.printStackTrace()
+        }
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,30 +60,18 @@ class ImageDetailActivity : AppCompatActivity() {
             return
         }
 
-        photo = intent.getParcelableExtra(PHOTO_EXTRA)
-
-        mViewModel.loadData(photo.id)
+        if (intent.action == ACTION_IMAGE_URL) {
+            loadImageFromUrl(intent.getParcelableExtra(PHOTO_EXTRA))
+            setupFabMenu(false)
+        } else {
+            loadImageFromFile(intent.getParcelableExtra(PHOTO_EXTRA))
+            setupFabMenu(true)
+        }
 
         setSupportActionBar(toolbar)
 
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        setupFabMenu()
-
-        picasso.load(photo.urls?.regular)
-                .into(img_photo, object : Callback {
-                    override fun onSuccess() {
-                        progress_bar.visibility = View.GONE
-                    }
-
-                    override fun onError(e: Exception?) {
-                        progress_bar.visibility = View.GONE
-                        e?.printStackTrace()
-                    }
-
-                })
-
 
         fab_menu.setOnActionSelectedListener {
             when (it.id) {
@@ -97,6 +98,25 @@ class ImageDetailActivity : AppCompatActivity() {
 
     }
 
+    private fun loadImageFromFile(image: ImageModel) {
+        mViewModel.loadData(image.id)
+
+        picasso.load(File(image.imagePath))
+                .config(Bitmap.Config.ARGB_8888)
+                .fit()
+                .centerInside()
+                .into(img_photo, onImageLoaded)
+    }
+
+    private fun loadImageFromUrl(photo: PhotoListResponse?) {
+
+        mViewModel.loadData(photo?.id!!)
+
+        picasso.load(photo.urls?.regular)
+                .into(img_photo, onImageLoaded)
+
+    }
+
     private fun setWallpaper() {
         // true downloads the image and sets as wallpaper but does not save it to file
         downloadImage(true)
@@ -118,17 +138,21 @@ class ImageDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupFabMenu() {
+    private fun setupFabMenu(isFile: Boolean = false) {
         val menuItems: ArrayList<SpeedDialActionItem> = arrayListOf()
 
-        val downloadItem = SpeedDialActionItem.Builder(R.id.fab_download, R.drawable.ic_download_white)
-                .setLabel(getString(R.string.download))
-                .setLabelBackgroundColor(ResourcesCompat.getColor(resources, R.color.black, theme))
-                .setLabelColor(ResourcesCompat.getColor(resources, R.color.white, theme))
-                .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.black, theme))
-                .create()
 
-        menuItems.add(downloadItem)
+        if (!isFile) {
+
+            val downloadItem = SpeedDialActionItem.Builder(R.id.fab_download, R.drawable.ic_download_white)
+                    .setLabel(getString(R.string.download))
+                    .setLabelBackgroundColor(ResourcesCompat.getColor(resources, R.color.black, theme))
+                    .setLabelColor(ResourcesCompat.getColor(resources, R.color.white, theme))
+                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.black, theme))
+                    .create()
+
+            menuItems.add(downloadItem)
+        }
 
         val wallpaperItem = SpeedDialActionItem.Builder(R.id.fab_set_wallpaper, R.drawable.ic_wallpaper_white)
                 .setLabel(getString(R.string.set_wallpaper))

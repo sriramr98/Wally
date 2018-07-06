@@ -15,7 +15,7 @@ import com.sriram.wally.models.response.PhotoListResponse
 import com.sriram.wally.ui.detail.ImageDetailActivity
 import com.sriram.wally.utils.EndlessScrollRvListener
 import kotlinx.android.synthetic.main.fragment_photos_list.*
-import org.jetbrains.anko.support.v4.startActivity
+import org.jetbrains.anko.support.v4.intentFor
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
 
@@ -45,7 +45,9 @@ class PhotosListFragment : Fragment() {
 
         mAdapter.onItemClickListener(object : PhotoListAdapter.PhotoListener {
             override fun onPhotoClicked(photo: PhotoListResponse) {
-                startActivity<ImageDetailActivity>(ImageDetailActivity.PHOTO_EXTRA to photo)
+                val intent = intentFor<ImageDetailActivity>(ImageDetailActivity.PHOTO_EXTRA to photo)
+                intent.action = ImageDetailActivity.ACTION_IMAGE_URL
+                startActivity(intent)
             }
         })
 

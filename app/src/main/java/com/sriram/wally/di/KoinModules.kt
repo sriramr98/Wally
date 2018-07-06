@@ -1,10 +1,12 @@
 package com.sriram.wally.di
 
+import com.sriram.wally.adapters.DownloadsListAdapter
 import com.sriram.wally.adapters.PhotoListAdapter
 import com.sriram.wally.db.ImagesRepo
 import com.sriram.wally.db.WallyDatabase
 import com.sriram.wally.networking.*
 import com.sriram.wally.ui.detail.ImageDetailViewModel
+import com.sriram.wally.ui.downloads.DownloadsViewModel
 import com.sriram.wally.ui.home.PhotosListViewModel
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.koin.androidApplication
@@ -43,4 +45,9 @@ val modules = applicationContext {
      */
     viewModel { ImageDetailViewModel(get()) }
 
+    /**
+     * Modules for DownloadsFragment
+     */
+    factory { DownloadsListAdapter(androidApplication(), get()) }
+    viewModel { DownloadsViewModel(get()) }
 }

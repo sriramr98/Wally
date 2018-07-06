@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import com.sriram.wally.R
+import com.sriram.wally.ui.downloads.DownloadsFragment
 import com.sriram.wally.ui.home.PhotosListFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
@@ -29,8 +30,12 @@ class MainActivity : AppCompatActivity() {
                 supportActionBar?.setTitle(R.string.title_dashboard)
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_notifications -> {
-                supportActionBar?.setTitle(R.string.title_notifications)
+            R.id.navigation_downloads -> {
+                if (currentFragmentTag != "DOWNLOADS") {
+                    supportActionBar?.setTitle(R.string.title_downloads)
+                    DownloadsFragment.instantiate().show(true, DownloadsFragment.TAG)
+                    currentFragmentTag = "DOWNLOADS"
+                }
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -46,7 +51,9 @@ class MainActivity : AppCompatActivity() {
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
-        PhotosListFragment.instantiate().show()
+        if (savedInstanceState == null) {
+            PhotosListFragment.instantiate().show()
+        }
 
     }
 
