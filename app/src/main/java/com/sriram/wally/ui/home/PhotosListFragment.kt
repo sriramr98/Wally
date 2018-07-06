@@ -61,9 +61,9 @@ class PhotosListFragment : Fragment() {
             }
         })
 
-        layout_refresh_photos_list.setOnRefreshListener {
-            mViewModel.fromStart()
-        }
+//        layout_refresh_photos_list.setOnRefreshListener {
+//            mViewModel.fromStart()
+//        }
 
         rv_images.addOnScrollListener(object : EndlessScrollRvListener(layoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
@@ -94,7 +94,7 @@ class PhotosListFragment : Fragment() {
     }
 
     private fun toggleLoading(isRefreshing: Boolean) {
-        layout_refresh_photos_list.isRefreshing = isRefreshing
+//        layout_refresh_photos_list.isRefreshing = isRefreshing
         rv_images.visibility = View.VISIBLE
         layout_error.visibility = View.GONE
     }
