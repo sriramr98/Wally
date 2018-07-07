@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import com.sriram.wally.R
+import com.sriram.wally.ui.collections.CollectionsFragment
 import com.sriram.wally.ui.downloads.DownloadsFragment
 import com.sriram.wally.ui.home.PhotosListFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -26,8 +27,12 @@ class MainActivity : AppCompatActivity() {
                 }
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_dashboard -> {
-                supportActionBar?.setTitle(R.string.title_dashboard)
+            R.id.navigation_collections -> {
+                if (currentFragmentTag != "COLLECTIONS") {
+                    supportActionBar?.setTitle(R.string.title_collections)
+                    CollectionsFragment.instantiate().show(true, CollectionsFragment.TAG)
+                    currentFragmentTag = "COLLECTIONS"
+                }
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_downloads -> {

@@ -1,8 +1,10 @@
 package com.sriram.wally.networking
 
+import com.sriram.wally.models.response.Collection
 import com.sriram.wally.models.response.DownloadResponse
 import com.sriram.wally.models.response.PhotoDetailResponse
 import com.sriram.wally.models.response.PhotoListResponse
+import io.reactivex.Observable
 import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
@@ -19,5 +21,8 @@ interface WallyService {
 
     @GET("photos/{id}/download")
     fun getDownloadUrl(@Path("id") id: String): Call<DownloadResponse>
+
+    @GET("/collections")
+    fun getAllCollections(@Query("page") page: Int): Observable<List<Collection>>
 
 }

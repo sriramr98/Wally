@@ -1,12 +1,13 @@
 package com.sriram.wally.networking
 
+import com.sriram.wally.models.response.Collection
 import com.sriram.wally.models.response.DownloadResponse
 import com.sriram.wally.models.response.PhotoDetailResponse
 import com.sriram.wally.models.response.PhotoListResponse
 import com.sriram.wally.utils.SharedPrefUtils
+import io.reactivex.Observable
 import io.reactivex.Single
 import retrofit2.Call
-import retrofit2.Callback
 
 class NetworkRepo(private val wallyService: WallyService) {
 
@@ -20,6 +21,10 @@ class NetworkRepo(private val wallyService: WallyService) {
 
     fun getDownloadsEndpoint(id: String?): Call<DownloadResponse> {
         return wallyService.getDownloadUrl(id!!)
+    }
+
+    fun getAllCollections(page: Int): Observable<List<Collection>> {
+        return wallyService.getAllCollections(page)
     }
 
 }

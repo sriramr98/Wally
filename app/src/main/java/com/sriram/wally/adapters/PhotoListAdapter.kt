@@ -57,6 +57,8 @@ class PhotoListAdapter(context: Context, val picasso: Picasso) : RecyclerView.Ad
         fun bind(image: PhotoListResponse) {
             Logger.i(image.urls?.regular ?: "No regular image")
             picasso.load(image.urls?.regular)
+                    .fit()
+                    .centerInside()
                     .error(android.R.color.black)
                     .placeholder(android.R.color.darker_gray)
                     .into(itemView.item_image)

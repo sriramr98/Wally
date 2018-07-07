@@ -15,4 +15,5 @@
     <string name="downloading">Downloading</string>
     <string name="img_artist">Image of the artist</string>
     <string name="title_downloads">Downloads</string>
+    <string name="title_collections">Collections</string>
 </resources>
