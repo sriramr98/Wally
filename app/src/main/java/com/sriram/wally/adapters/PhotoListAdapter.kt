@@ -30,6 +30,7 @@ class PhotoListAdapter(context: Context, val picasso: Picasso) : RecyclerView.Ad
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(images[position])
 
     fun setImages(images: ArrayList<PhotoListResponse>) {
+        Logger.e("Images set")
         val callback = DiffCallback(this.images, images)
         val result = DiffUtil.calculateDiff(callback)
 
@@ -55,10 +56,8 @@ class PhotoListAdapter(context: Context, val picasso: Picasso) : RecyclerView.Ad
         }
 
         fun bind(image: PhotoListResponse) {
-            Logger.i(image.urls?.regular ?: "No regular image")
+            Logger.e(image.urls?.regular ?: "No regular image")
             picasso.load(image.urls?.regular)
-                    .fit()
-                    .centerInside()
                     .error(android.R.color.black)
                     .placeholder(android.R.color.darker_gray)
                     .into(itemView.item_image)

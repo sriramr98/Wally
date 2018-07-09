@@ -27,4 +27,9 @@ class NetworkRepo(private val wallyService: WallyService) {
         return wallyService.getAllCollections(page)
     }
 
+    fun getPhotosOfCollection(id: String, page: Int): Single<List<PhotoListResponse>> {
+        return wallyService.getAllPhotosOfCollection(id, page)
+    }
+
+
 }

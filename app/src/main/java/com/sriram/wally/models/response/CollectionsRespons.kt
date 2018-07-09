@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Collection(
         @field:SerializedName("id")
-        var id: Int,
+        var id: String,
         @field:SerializedName("title")
         var title: String,
         @field:SerializedName("description")
@@ -23,7 +23,7 @@ data class Collection(
         @field:SerializedName("private")
         var private: Boolean,
         @field:SerializedName("cover_photo")
-        var coverPhoto: CoverPhoto,
+        var coverPhoto: CoverPhoto?,
         @field:SerializedName("user")
         var user: User
 ) : Parcelable
@@ -31,17 +31,17 @@ data class Collection(
 @Parcelize
 data class CoverPhoto(
         @field:SerializedName("id")
-        var id: String,
+        var id: String?,
         @field:SerializedName("width")
-        var width: Int,
+        var width: Int?,
         @field:SerializedName("height")
-        var height: Int,
+        var height: Int?,
         @field:SerializedName("color")
-        var color: String,
+        var color: String?,
         @field:SerializedName("description")
-        var description: String,
+        var description: String?,
         @field:SerializedName("user")
-        var user: User,
+        var user: User?,
         @field:SerializedName("urls")
-        var urls: Urls
+        var urls: Urls?
 ) : Parcelable

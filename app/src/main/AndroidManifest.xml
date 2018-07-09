@@ -24,8 +24,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.detail.ImageDetailActivity"></activity>
+        <activity android:name=".ui.detail.ImageDetailActivity" />
+
         <service android:name=".core.WallyService" />
+
+        <activity android:name=".ui.collections.CollectionsDetailActivity" />
+        
     </application>
 
 </manifest>

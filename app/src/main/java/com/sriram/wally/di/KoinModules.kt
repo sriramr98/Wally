@@ -1,11 +1,13 @@
 package com.sriram.wally.di
 
+import com.sriram.wally.adapters.CollectionItemListAdapter
 import com.sriram.wally.adapters.CollectionsListAdapter
 import com.sriram.wally.adapters.DownloadsListAdapter
 import com.sriram.wally.adapters.PhotoListAdapter
 import com.sriram.wally.db.ImagesRepo
 import com.sriram.wally.db.WallyDatabase
 import com.sriram.wally.networking.*
+import com.sriram.wally.ui.collections.CollectionsDetailViewModel
 import com.sriram.wally.ui.collections.CollectionsViewModel
 import com.sriram.wally.ui.detail.ImageDetailViewModel
 import com.sriram.wally.ui.downloads.DownloadsViewModel
@@ -58,4 +60,10 @@ val modules = applicationContext {
      */
     factory { CollectionsListAdapter(androidApplication(), get()) }
     viewModel { CollectionsViewModel(get()) }
+
+    /**
+     * Modules for CollectionsDetailActivity
+     */
+    viewModel { CollectionsDetailViewModel(get()) }
+    factory { CollectionItemListAdapter(androidApplication(), get()) }
 }

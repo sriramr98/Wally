@@ -25,4 +25,7 @@ interface WallyService {
     @GET("/collections")
     fun getAllCollections(@Query("page") page: Int): Observable<List<Collection>>
 
+    @GET("/collections/{id}/photos")
+    fun getAllPhotosOfCollection(@Path("id") id: String, @Query("page") page: Int): Single<List<PhotoListResponse>>
+
 }

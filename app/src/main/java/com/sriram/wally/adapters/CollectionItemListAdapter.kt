@@ -1,33 +1,26 @@
 package com.sriram.wally.adapters
 
 import android.content.Context
-import android.graphics.Color
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import com.sriram.wally.R
-import com.sriram.wally.models.response.Collection
+import com.sriram.wally.models.response.PhotoListResponse
 import com.sriram.wally.utils.DiffCallback
 import com.sriram.wally.utils.Logger
-import kotlinx.android.synthetic.main.item_collection.view.*
-import java.lang.Exception
+import kotlinx.android.synthetic.main.item_image.view.*
 
-class CollectionsListAdapter(val context: Context, val picasso: Picasso) : RecyclerView.Adapter<CollectionsListAdapter.ViewHolder>() {
+class CollectionItemListAdapter(context: Context, val picasso: Picasso) : RecyclerView.Adapter<CollectionItemListAdapter.ViewHolder>() {
 
     private val inflater = LayoutInflater.from(context)
-    private val images = arrayListOf<Collection>()
+    private val images = arrayListOf<PhotoListResponse>()
     private var mListener: PhotoListener? = null
 
-    init {
-        Logger.i(picasso)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = inflater.inflate(R.layout.item_collection, parent, false)
+        val view = inflater.inflate(R.layout.item_image, parent, false)
         return ViewHolder(view)
     }
 
@@ -36,7 +29,8 @@ class CollectionsListAdapter(val context: Context, val picasso: Picasso) : Recyc
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(images[position])
 
-    fun setImages(images: ArrayList<Collection>) {
+    fun setImages(images: ArrayList<PhotoListResponse>) {
+        Logger.e("Images set")
         val callback = DiffCallback(this.images, images)
         val result = DiffUtil.calculateDiff(callback)
 
@@ -50,7 +44,7 @@ class CollectionsListAdapter(val context: Context, val picasso: Picasso) : Recyc
     }
 
     interface PhotoListener {
-        fun onPhotoClicked(photo: Collection)
+        fun onPhotoClicked(photo: PhotoListResponse)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -61,26 +55,12 @@ class CollectionsListAdapter(val context: Context, val picasso: Picasso) : Recyc
             }
         }
 
-        fun bind(image: Collection) {
-
-            val placeholderColor = Color.parseColor(image.coverPhoto?.color)
-            // we are doing this since picasso does not support using color Int's as placeholders
-            itemView.img_cover.setBackgroundColor(placeholderColor)
-
-            picasso.load(image.coverPhoto?.urls?.regular)
+        fun bind(image: PhotoListResponse) {
+            Logger.e(image.urls?.regular ?: "No regular image")
+            picasso.load(image.urls?.regular)
                     .error(android.R.color.black)
-                    .into(itemView.img_cover, object : Callback {
-                        override fun onSuccess() {
-                            itemView.tv_title.text = image.title
-                            itemView.tv_count.text = "${image.totalPhotos} photos"
-                        }
-
-                        override fun onError(e: Exception?) {
-                            e?.printStackTrace()
-                        }
-
-                    })
-
+                    .placeholder(android.R.color.darker_gray)
+                    .into(itemView.item_image)
         }
     }
 }

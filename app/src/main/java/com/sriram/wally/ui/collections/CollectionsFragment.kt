@@ -12,6 +12,7 @@ import com.sriram.wally.adapters.CollectionsListAdapter
 import com.sriram.wally.models.NetworkStatus
 import com.sriram.wally.models.response.Collection
 import kotlinx.android.synthetic.main.fragment_collections.*
+import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.support.v4.toast
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
@@ -49,6 +50,13 @@ class CollectionsFragment : Fragment() {
                 // success
                 showSuccess(it.items)
             }
+        })
+
+        mAdpater.onItemClickListener(object : CollectionsListAdapter.PhotoListener {
+            override fun onPhotoClicked(photo: Collection) {
+                startActivity<CollectionsDetailActivity>(CollectionsDetailActivity.TAG to photo)
+            }
+
         })
 
     }
