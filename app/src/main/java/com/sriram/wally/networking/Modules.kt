@@ -1,6 +1,7 @@
 package com.sriram.wally.networking
 
 import android.content.Context
+import com.squareup.picasso.LruCache
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
 import com.sriram.wally.utils.Logger
@@ -60,8 +61,11 @@ fun getPicassoDownloader(okHttpClient: OkHttpClient): OkHttp3Downloader {
 }
 
 fun getPicasso(context: Context, downloader: OkHttp3Downloader): Picasso {
+    val availableMemmory = (Runtime.getRuntime().maxMemory() / 1024).toInt()
+    val cacheSize = availableMemmory / 8
     return Picasso.Builder(context)
             .downloader(downloader)
+            .memoryCache(LruCache(cacheSize))
             .loggingEnabled(true)
             .build()
 
