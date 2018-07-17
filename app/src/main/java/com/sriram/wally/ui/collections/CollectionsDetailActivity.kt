@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
 import com.sriram.wally.R
-import com.sriram.wally.adapters.CollectionItemListAdapter
 import com.sriram.wally.adapters.PhotoListAdapter
 import com.sriram.wally.models.NetworkStatus
 import com.sriram.wally.models.response.Collection
