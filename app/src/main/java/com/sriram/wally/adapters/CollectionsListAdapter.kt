@@ -27,6 +27,7 @@ class CollectionsListAdapter(val context: Context, val picasso: Picasso) : Recyc
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        Logger.i("OnCreateViewHolder")
         val view = inflater.inflate(R.layout.item_collection, parent, false)
         return ViewHolder(view)
     }
@@ -34,7 +35,10 @@ class CollectionsListAdapter(val context: Context, val picasso: Picasso) : Recyc
     override fun getItemCount() = images.size
 
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(images[position])
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        Logger.i("OnCreateViewHolder")
+        holder.bind(images[position])
+    }
 
     fun setImages(images: ArrayList<Collection>) {
         val callback = DiffCallback(this.images, images)
@@ -62,7 +66,7 @@ class CollectionsListAdapter(val context: Context, val picasso: Picasso) : Recyc
         }
 
         fun bind(image: Collection) {
-
+            Logger.i("Binding View")
             val placeholderColor = Color.parseColor(image.coverPhoto?.color)
             // we are doing this since picasso does not support using color Int's as placeholders
             itemView.img_cover.setBackgroundColor(placeholderColor)

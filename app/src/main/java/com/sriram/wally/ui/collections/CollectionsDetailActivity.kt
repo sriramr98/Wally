@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
 import com.sriram.wally.R
 import com.sriram.wally.adapters.CollectionItemListAdapter
+import com.sriram.wally.adapters.PhotoListAdapter
 import com.sriram.wally.models.NetworkStatus
 import com.sriram.wally.models.response.Collection
 import com.sriram.wally.models.response.PhotoListResponse
@@ -22,7 +23,7 @@ class CollectionsDetailActivity : AppCompatActivity() {
         const val TAG = "collection-detail"
     }
 
-    private val mAdapter: CollectionItemListAdapter by inject()
+    private val mAdapter: PhotoListAdapter by inject()
     private val mViewModel: CollectionsDetailViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +45,7 @@ class CollectionsDetailActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rv_collection_items.layoutManager = layoutManager
         rv_collection_items.adapter = mAdapter
-        rv_collection_items.isNestedScrollingEnabled = true
+//        rv_collection_items.isNestedScrollingEnabled = true
 
         mViewModel.getPhotos(collectionData.id).observe(this, Observer {
             if (it == null || it.status == NetworkStatus.FAILURE) {
