@@ -4,14 +4,16 @@ import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
 import com.sriram.wally.R
 import com.sriram.wally.adapters.PhotoListAdapter
 import com.sriram.wally.models.NetworkStatus
 import com.sriram.wally.models.response.Collection
 import com.sriram.wally.models.response.PhotoListResponse
+import com.sriram.wally.utils.EndlessScrollRvListener
 import kotlinx.android.synthetic.main.activity_collections_detail.*
-import kotlinx.android.synthetic.main.content_collections_detail.*
+import kotlinx.android.synthetic.main.fragment_photos_list.*
 import org.jetbrains.anko.toast
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
@@ -38,13 +40,11 @@ class CollectionsDetailActivity : AppCompatActivity() {
         }
 
         supportActionBar?.title = collectionData.title
-        tv_description.text = collectionData.description
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rv_collection_items.layoutManager = layoutManager
         rv_collection_items.adapter = mAdapter
-//        rv_collection_items.isNestedScrollingEnabled = true
 
         mViewModel.getPhotos(collectionData.id).observe(this, Observer {
             if (it == null || it.status == NetworkStatus.FAILURE) {
@@ -57,6 +57,13 @@ class CollectionsDetailActivity : AppCompatActivity() {
             }
         })
 
+        rv_collection_items.addOnScrollListener(object : EndlessScrollRvListener(layoutManager) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
+                mViewModel.refresh()
+            }
+
+        })
+
     }
 
     private fun loading() {
@@ -65,11 +72,14 @@ class CollectionsDetailActivity : AppCompatActivity() {
 
     private fun failure() {
         layout_refresh.isRefreshing = false
-        toast("Error loading data")
+        if (mAdapter.getImages().isEmpty()) {
+            toast("Error loading data")
+        }
     }
 
     private fun success(photos: ArrayList<PhotoListResponse>) {
         layout_refresh.isRefreshing = false
+        toast(photos.size.toString())
         mAdapter.setImages(photos)
     }
 

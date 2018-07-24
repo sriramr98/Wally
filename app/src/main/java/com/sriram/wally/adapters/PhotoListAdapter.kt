@@ -1,6 +1,8 @@
 package com.sriram.wally.adapters
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -43,6 +45,10 @@ class PhotoListAdapter(context: Context, val picasso: Picasso) : RecyclerView.Ad
         mListener = listener
     }
 
+    fun getImages(): ArrayList<PhotoListResponse> {
+        return images
+    }
+
     interface PhotoListener {
         fun onPhotoClicked(photo: PhotoListResponse)
     }
@@ -57,9 +63,12 @@ class PhotoListAdapter(context: Context, val picasso: Picasso) : RecyclerView.Ad
 
         fun bind(image: PhotoListResponse) {
             Logger.e(image.urls?.regular ?: "No regular image")
+
+            val placeholder = ColorDrawable(Color.parseColor(image.color))
+
             picasso.load(image.urls?.regular)
                     .error(android.R.color.black)
-                    .placeholder(android.R.color.darker_gray)
+                    .placeholder(placeholder)
                     .into(itemView.item_image)
         }
     }

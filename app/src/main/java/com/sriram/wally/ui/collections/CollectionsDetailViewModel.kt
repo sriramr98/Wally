@@ -16,17 +16,17 @@ class CollectionsDetailViewModel(private val wallyRepo: NetworkRepo) : ViewModel
     private val photosData = MutableLiveData<NetworkResponse<PhotoListResponse>>()
     private val compositeDisposable = CompositeDisposable()
     private var id: String = ""
+    private var page = 1
 
-    private fun queryData(id: String = this.id, page: Int = 1) {
+    private fun queryData(id: String = this.id) {
+
         photosData.value = NetworkResponse(NetworkStatus.LOADING)
         val disposable = wallyRepo.getPhotosOfCollection(id, page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    val oldData = photosData.value?.items
-                    if (oldData != null) {
-                        oldData.addAll(it)
-                        photosData.value = NetworkResponse(NetworkStatus.SUCCESS, oldData)
+                    if (it != null && it.isNotEmpty()) {
+                        photosData.value = NetworkResponse(NetworkStatus.SUCCESS, ArrayList(it))
                     } else {
                         photosData.value = NetworkResponse(NetworkStatus.FAILURE)
                     }
@@ -44,4 +44,29 @@ class CollectionsDetailViewModel(private val wallyRepo: NetworkRepo) : ViewModel
         return photosData
     }
 
+    fun refresh() {
+        val disposable = wallyRepo.getPhotosOfCollection(id, ++page)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    val oldData = photosData.value?.items
+                    oldData?.addAll(it)
+                    if (it != null && it.isNotEmpty()) {
+                        photosData.value = NetworkResponse(NetworkStatus.SUCCESS, oldData
+                                ?: arrayListOf())
+                    } else {
+                        photosData.value = NetworkResponse(NetworkStatus.FAILURE, oldData
+                                ?: arrayListOf())
+                    }
+                }, {
+                    photosData.value = NetworkResponse(NetworkStatus.FAILURE, photosData.value?.items
+                            ?: arrayListOf())
+                })
+        compositeDisposable.add(disposable)
+    }
+
+    override fun onCleared() {
+        compositeDisposable.dispose()
+        super.onCleared()
+    }
 }

@@ -11,7 +11,7 @@ data class Collection(
         @field:SerializedName("title")
         var title: String,
         @field:SerializedName("description")
-        var description: String,
+        var description: String?,
         @field:SerializedName("published_at")
         var publishedAt: String,
         @field:SerializedName("updated_at")

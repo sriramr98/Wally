@@ -23,8 +23,9 @@ fun Bitmap.saveToFile(id: String? = UUID.randomUUID().toString(), imagesRepo: Im
 
     // create a new file to save the image in with name as id
     val imageFile = File(wallyFolder, "$id.jpeg")
-    imageFile.createNewFile()
-
+    if (!imageFile.exists()) {
+        imageFile.createNewFile()
+    }
     try {
         val outputStream = FileOutputStream(imageFile)
 
