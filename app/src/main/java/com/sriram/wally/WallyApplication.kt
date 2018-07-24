@@ -33,7 +33,7 @@ class WallyApplication : Application() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.download_images_channel_name)
             val description = getString(R.string.download_images_channel_description)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(Constants.IMAGE_DOWNLOAD_CHANNEL, name, importance)
             channel.description = description
             // Register the channel with the system; you can't change the importance

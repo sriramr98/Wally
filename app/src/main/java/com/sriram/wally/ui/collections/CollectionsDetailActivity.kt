@@ -11,9 +11,12 @@ import com.sriram.wally.adapters.PhotoListAdapter
 import com.sriram.wally.models.NetworkStatus
 import com.sriram.wally.models.response.Collection
 import com.sriram.wally.models.response.PhotoListResponse
+import com.sriram.wally.ui.detail.ImageDetailActivity
 import com.sriram.wally.utils.EndlessScrollRvListener
 import kotlinx.android.synthetic.main.activity_collections_detail.*
 import kotlinx.android.synthetic.main.fragment_photos_list.*
+import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.support.v4.intentFor
 import org.jetbrains.anko.toast
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
@@ -60,6 +63,14 @@ class CollectionsDetailActivity : AppCompatActivity() {
         rv_collection_items.addOnScrollListener(object : EndlessScrollRvListener(layoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
                 mViewModel.refresh()
+            }
+        })
+
+        mAdapter.onItemClickListener(object : PhotoListAdapter.PhotoListener {
+            override fun onPhotoClicked(photo: PhotoListResponse) {
+                val intent = intentFor<ImageDetailActivity>(ImageDetailActivity.PHOTO_EXTRA to photo)
+                intent.action = ImageDetailActivity.ACTION_IMAGE_URL
+                startActivity(intent)
             }
 
         })

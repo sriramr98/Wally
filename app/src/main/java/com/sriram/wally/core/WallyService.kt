@@ -12,6 +12,7 @@ import com.sriram.wally.utils.Constants
 import com.sriram.wally.utils.saveToFile
 import org.jetbrains.anko.notificationManager
 import org.koin.android.ext.android.inject
+import java.net.SocketTimeoutException
 
 class WallyService : IntentService(NAME) {
 
@@ -40,46 +41,49 @@ class WallyService : IntentService(NAME) {
                 .setSmallIcon(R.drawable.ic_download)
                 .setContentTitle(getString(R.string.downloading_image_title))
                 .setContentText(getString(R.string.downloading))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
 
         mBuilder.setProgress(0, 0, true).setOngoing(true)
         notificationManager.notify(DOWNLOAD_NOTIFICATION_ID, mBuilder.build())
 
 
-        val response = networkRepo.getDownloadsEndpoint(id).execute()
+        try {
+            val response = networkRepo.getDownloadsEndpoint(id).execute()
+            if (response.isSuccessful) {
+                // success
+                val url = response.body()?.url
+                val image = picasso.load(url)
+                        .get()
+                if (image == null) {
+                    // failure
+                    mBuilder.setContentText("Download failed. Please try again later")
+                            .setProgress(0, 0, false).setOngoing(false)
+                    notificationManager.notify(DOWNLOAD_NOTIFICATION_ID, mBuilder.build())
+                } else {
+                    // success
+                    if (setWallpaper) {
+                        // This action is to set wallpaper. So we just set as wallpaper without saving to file
+                        val wallpaperManager = WallpaperManager.getInstance(this)
+                        wallpaperManager.setBitmap(image)
+                        mBuilder.setContentText("Wallpaper success.")
+                                .setProgress(0, 0, false).setOngoing(false)
+                        notificationManager.notify(DOWNLOAD_NOTIFICATION_ID, mBuilder.build())
 
-        if (response.isSuccessful) {
-            // success
-            val url = response.body()?.url
-            val image = picasso.load(url)
-                    .get()
-            if (image == null) {
+                    } else {
+                        // the action is to download. So we save it to file
+                        image.saveToFile(id, imagesRepo)
+                        mBuilder.setContentText("Download success. You can view your downloaded images in the downloads section")
+                                .setProgress(0, 0, false).setOngoing(false)
+                        notificationManager.notify(DOWNLOAD_NOTIFICATION_ID, mBuilder.build())
+                    }
+                }
+            } else {
                 // failure
                 mBuilder.setContentText("Download failed. Please try again later")
                         .setProgress(0, 0, false).setOngoing(false)
-                notificationManager.notify(DOWNLOAD_NOTIFICATION_ID, mBuilder.build())
-            } else {
-                // success
-                if (setWallpaper) {
-                    // This action is to set wallpaper. So we just set as wallpaper without saving to file
-                    val wallpaperManager = WallpaperManager.getInstance(this)
-                    wallpaperManager.setBitmap(image)
-                    mBuilder.setContentText("Wallpaper success.")
-                            .setProgress(0, 0, false).setOngoing(false)
-                    notificationManager.notify(DOWNLOAD_NOTIFICATION_ID, mBuilder.build())
-
-                } else {
-                    // the action is to download. So we save it to file
-                    image.saveToFile(id, imagesRepo)
-                    mBuilder.setContentText("Download success. You can view your downloaded images in the downloads section")
-                            .setProgress(0, 0, false).setOngoing(false)
-                    notificationManager.notify(DOWNLOAD_NOTIFICATION_ID, mBuilder.build())
-                }
             }
-        } else {
-            // failure
-            mBuilder.setContentText("Download failed. Please try again later")
-                    .setProgress(0, 0, false).setOngoing(false)
+        } catch (e: SocketTimeoutException) {
+            e.printStackTrace()
         }
 
 
