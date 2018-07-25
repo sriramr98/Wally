@@ -16,8 +16,10 @@ class CollectionsViewModel(val networkRepo: NetworkRepo) : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
     private val collectionsData = MutableLiveData<NetworkResponse<Collection>>()
 
+    var page = 1
+
     init {
-        refreshData(0)
+        refreshData(page)
     }
 
     private fun refreshData(page: Int) {
@@ -26,10 +28,8 @@ class CollectionsViewModel(val networkRepo: NetworkRepo) : ViewModel() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    val oldData = collectionsData.value?.items
-                    if (oldData != null) {
-                        oldData.addAll(it)
-                        collectionsData.value = NetworkResponse(NetworkStatus.SUCCESS, oldData)
+                    if (it != null && it.isNotEmpty()) {
+                        collectionsData.value = NetworkResponse(NetworkStatus.SUCCESS, ArrayList(it))
                     } else {
                         collectionsData.value = NetworkResponse(NetworkStatus.FAILURE)
                     }
@@ -42,6 +42,23 @@ class CollectionsViewModel(val networkRepo: NetworkRepo) : ViewModel() {
 
     fun getCollections(): LiveData<NetworkResponse<Collection>> {
         return collectionsData
+    }
+
+    fun loadMore() {
+        val disposable = networkRepo.getAllCollections(++page)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    if (it != null && it.isNotEmpty()) {
+                        val oldData = collectionsData.value?.items
+                        oldData?.addAll(it)
+                        collectionsData.value = NetworkResponse(NetworkStatus.SUCCESS, oldData
+                                ?: arrayListOf())
+                    }
+                }, {
+                    it.printStackTrace()
+                })
+        compositeDisposable.addAll(disposable)
     }
 
     override fun onCleared() {

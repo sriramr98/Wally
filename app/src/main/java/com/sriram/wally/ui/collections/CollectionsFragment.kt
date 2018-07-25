@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import com.sriram.wally.R
 import com.sriram.wally.adapters.CollectionsListAdapter
 import com.sriram.wally.models.NetworkStatus
 import com.sriram.wally.models.response.Collection
+import com.sriram.wally.utils.EndlessScrollRvListener
 import kotlinx.android.synthetic.main.fragment_collections.*
 import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.support.v4.toast
@@ -59,9 +61,17 @@ class CollectionsFragment : Fragment() {
 
         })
 
+        rv_collections.addOnScrollListener(object : EndlessScrollRvListener(layoutManager) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
+                mViewModel.loadMore()
+            }
+
+        })
+
     }
 
     private fun showSuccess(images: ArrayList<Collection>) {
+        toast(images.size.toString())
         pb_collections.visibility = View.GONE
         mAdpater.setImages(images)
     }
