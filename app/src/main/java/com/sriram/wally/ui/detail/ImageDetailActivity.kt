@@ -79,7 +79,7 @@ class ImageDetailActivity : AppCompatActivity() {
             when (it.id) {
                 R.id.fab_download -> {
                     // result is handled in the live data callback below
-                    downloadImage(false)
+                    downloadImage()
                     false // true to keep the Speed Dial open
                 }
                 R.id.fab_info -> {
@@ -124,7 +124,7 @@ class ImageDetailActivity : AppCompatActivity() {
         downloadImage(true)
     }
 
-    private fun downloadImage(setWallpaper: Boolean) {
+    private fun downloadImage(setWallpaper: Boolean = false) {
         askPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE).onAccepted {
             if (isExternalStorageWritable()) {
                 if (isConnectedToNetwork(this)) {
