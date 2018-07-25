@@ -1,8 +1,10 @@
 package com.sriram.wally.core
 
 import android.app.IntentService
+import android.app.Service
 import android.app.WallpaperManager
 import android.content.Intent
+import android.os.Build
 import android.support.v4.app.NotificationCompat
 import com.squareup.picasso.Picasso
 import com.sriram.wally.R
@@ -13,6 +15,11 @@ import com.sriram.wally.utils.saveToFile
 import org.jetbrains.anko.notificationManager
 import org.koin.android.ext.android.inject
 import java.net.SocketTimeoutException
+import android.content.Context.NOTIFICATION_SERVICE
+import android.app.NotificationManager
+import android.app.NotificationChannel
+import android.content.Context
+
 
 class WallyService : IntentService(NAME) {
 
@@ -26,6 +33,18 @@ class WallyService : IntentService(NAME) {
         const val EXTRA_IMAGE_ID = "image-id"
         const val DOWNLOAD_NOTIFICATION_ID = 2334
         const val EXTRA_SET_WALLPAPER = "set-wallpaper"
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            val notification = NotificationCompat.Builder(this, Constants.IMAGE_DOWNLOAD_CHANNEL)
+                    .setContentTitle("Downloading Image")
+                    .setContentText("Starting image download. Please wait").build()
+
+            startForeground(1, notification)
+        }
     }
 
     override fun onHandleIntent(intent: Intent?) {
@@ -79,11 +98,16 @@ class WallyService : IntentService(NAME) {
                 }
             } else {
                 // failure
-                mBuilder.setContentText("Download failed. Please try again later")
-                        .setProgress(0, 0, false).setOngoing(false)
+                val notification = mBuilder.setContentText("Download failed. Please try again later")
+                        .setProgress(0, 0, false).setOngoing(false).build()
+                notificationManager.notify(DOWNLOAD_NOTIFICATION_ID, notification)
             }
         } catch (e: SocketTimeoutException) {
             e.printStackTrace()
+            val notification = mBuilder.setContentText("Download failed due to error in network. Please try again later.")
+                    .setProgress(0, 0, false).setOngoing(false)
+                    .build()
+            notificationManager.notify(DOWNLOAD_NOTIFICATION_ID, notification)
         }
 
 

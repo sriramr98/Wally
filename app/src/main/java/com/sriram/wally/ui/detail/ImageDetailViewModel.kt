@@ -10,7 +10,7 @@ import io.reactivex.schedulers.Schedulers
 
 class ImageDetailViewModel(private val networkRepo: NetworkRepo) : ViewModel() {
 
-    lateinit var imageData: PhotoDetailResponse
+    var imageData: PhotoDetailResponse? = null
     private val compositeDisposable = CompositeDisposable()
 
     fun loadData(id: String) {
@@ -33,7 +33,7 @@ class ImageDetailViewModel(private val networkRepo: NetworkRepo) : ViewModel() {
     }
 
     fun getId(): String? {
-        return imageData.id
+        return imageData?.id ?: ""
     }
 
 }

@@ -2,6 +2,7 @@ package com.sriram.wally.ui.detail
 
 import android.R.attr.uiOptions
 import android.graphics.Bitmap
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
@@ -81,8 +82,8 @@ class ImageDetailActivity : AppCompatActivity() {
                     false // true to keep the Speed Dial open
                 }
                 R.id.fab_info -> {
-                    val infoSheet = InfoBottomSheet.instantiate(mViewModel.imageData)
-                    infoSheet.show(supportFragmentManager, InfoBottomSheet.TAG)
+                    val infoSheet = mViewModel.imageData?.let { it1 -> InfoBottomSheet.instantiate(it1) }
+                    infoSheet?.show(supportFragmentManager, InfoBottomSheet.TAG)
                     false
                 }
                 R.id.fab_set_wallpaper -> {
@@ -127,7 +128,12 @@ class ImageDetailActivity : AppCompatActivity() {
             if (isConnectedToNetwork(this)) {
                 val downloadService = intentFor<WallyService>(WallyService.EXTRA_IMAGE_ID to mViewModel.getId(), WallyService.EXTRA_SET_WALLPAPER to setWallpaper)
                 downloadService.action = WallyService.ACTION_DOWNLOAD_IMAGE
-                startService(downloadService)
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startForegroundService(downloadService)
+                } else {
+                    startService(downloadService)
+                }
 
                 toast("Your image will be downloaded in the background")
             } else {
