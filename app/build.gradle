@@ -91,6 +91,8 @@ dependencies {
 
     implementation "android.arch.work:work-runtime-ktx:$work_version"
 
+    implementation 'com.github.florent37:runtime-permission:1.0.1'
+
     implementation "com.android.support:support-compat:27.1.1"
 
     testImplementation "junit:junit:4.12"

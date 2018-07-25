@@ -1,5 +1,6 @@
 package com.sriram.wally.ui.detail
 
+import android.Manifest
 import android.R.attr.uiOptions
 import android.graphics.Bitmap
 import android.os.Build
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import com.github.florent37.runtimepermission.RuntimePermission.askPermission
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
@@ -21,8 +23,7 @@ import com.sriram.wally.utils.Logger
 import com.sriram.wally.utils.isConnectedToNetwork
 import com.sriram.wally.utils.isExternalStorageWritable
 import kotlinx.android.synthetic.main.activity_image_detail.*
-import org.jetbrains.anko.intentFor
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.*
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
 import java.io.File
@@ -124,24 +125,45 @@ class ImageDetailActivity : AppCompatActivity() {
     }
 
     private fun downloadImage(setWallpaper: Boolean) {
-        if (isExternalStorageWritable()) {
-            if (isConnectedToNetwork(this)) {
-                val downloadService = intentFor<WallyService>(WallyService.EXTRA_IMAGE_ID to mViewModel.getId(), WallyService.EXTRA_SET_WALLPAPER to setWallpaper)
-                downloadService.action = WallyService.ACTION_DOWNLOAD_IMAGE
+        askPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE).onAccepted {
+            if (isExternalStorageWritable()) {
+                if (isConnectedToNetwork(this)) {
+                    val downloadService = intentFor<WallyService>(WallyService.EXTRA_IMAGE_ID to mViewModel.getId(), WallyService.EXTRA_SET_WALLPAPER to setWallpaper)
+                    downloadService.action = WallyService.ACTION_DOWNLOAD_IMAGE
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    startForegroundService(downloadService)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        startForegroundService(downloadService)
+                    } else {
+                        startService(downloadService)
+                    }
+
+                    toast("Your image will be downloaded in the background")
                 } else {
-                    startService(downloadService)
+                    toast("No internet connection detected. Please try again")
                 }
-
-                toast("Your image will be downloaded in the background")
             } else {
-                toast("No internet connection detected. Please try again")
+                toast("Error cannot find external storage to download images")
             }
-        } else {
-            toast("Error cannot find external storage to download images")
-        }
+        }.onDenied { e ->
+            alert("We need permission to access local storage for us to download and save the image. Please grant us the permissions", "Grant Permission") {
+                okButton {
+                    e.askAgain()
+                }
+                noButton {
+                    it.dismiss()
+                }
+            }.show()
+        }.onForeverDenied { e ->
+            alert("We need permission to access local storage for us to download and save the image. Please grant us the permissions", "Grant Permission") {
+                okButton {
+                    e.goToSettings()
+                }
+                noButton {
+                    it.dismiss()
+                    toast("Error downloading due to insufficient permissions")
+                }
+            }.show()
+        }.ask()
     }
 
     private fun setupFabMenu(isFile: Boolean = false) {

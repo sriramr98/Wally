@@ -1,11 +1,13 @@
 package com.sriram.wally.ui
 
+import android.Manifest
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import com.github.florent37.runtimepermission.RuntimePermission.askPermission
 import com.sriram.wally.R
 import com.sriram.wally.ui.collections.CollectionsFragment
 import com.sriram.wally.ui.downloads.DownloadsFragment
@@ -59,6 +61,10 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             PhotosListFragment.instantiate().show()
         }
+
+        // just ask for permission once. Do not need to handle rejection as the specific permissions
+        // will again be asked when required
+        askPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.SET_WALLPAPER).ask()
 
     }
 
