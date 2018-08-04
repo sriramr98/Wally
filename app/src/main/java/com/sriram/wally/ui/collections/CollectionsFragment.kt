@@ -13,6 +13,7 @@ import com.sriram.wally.adapters.CollectionsListAdapter
 import com.sriram.wally.models.NetworkStatus
 import com.sriram.wally.models.response.Collection
 import com.sriram.wally.utils.EndlessScrollRvListener
+import com.sriram.wally.utils.isConnectedToNetwork
 import kotlinx.android.synthetic.main.fragment_collections.*
 import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.support.v4.toast
@@ -82,6 +83,10 @@ class CollectionsFragment : Fragment() {
 
     private fun showFailure() {
         pb_collections.visibility = View.GONE
-        toast("Error")
+        if (isConnectedToNetwork(requireContext())) {
+            tv_error.text = "Error retrieving data. Please try again"
+        } else {
+            tv_error.text = "No Internet detected. Please try again"
+        }
     }
 }

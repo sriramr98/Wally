@@ -14,6 +14,7 @@ import com.sriram.wally.models.NetworkStatus
 import com.sriram.wally.models.response.PhotoListResponse
 import com.sriram.wally.ui.detail.ImageDetailActivity
 import com.sriram.wally.utils.EndlessScrollRvListener
+import com.sriram.wally.utils.isConnectedToNetwork
 import kotlinx.android.synthetic.main.fragment_photos_list.*
 import org.jetbrains.anko.support.v4.intentFor
 import org.koin.android.architecture.ext.viewModel
@@ -57,7 +58,11 @@ class PhotosListFragment : Fragment() {
             if (it == null || it.status == NetworkStatus.LOADING) {
                 toggleLoading(true)
             } else if (it.status == NetworkStatus.FAILURE && it.items.isEmpty()) {
-                showError("Error getting photos. Please try again")
+                if (isConnectedToNetwork(requireContext())) {
+                    showError("Error getting photos. Please try again")
+                } else {
+                    showError("No Internet connection. Please try again")
+                }
             } else if (it.status == NetworkStatus.SUCCESS) {
                 showSuccess(it.items)
             }

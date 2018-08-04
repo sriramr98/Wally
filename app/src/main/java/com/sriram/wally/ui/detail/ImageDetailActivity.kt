@@ -237,8 +237,13 @@ class ImageDetailActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_detail, menu)
-        return true
+        return if (intent.action == ACTION_IMAGE_URL) {
+            menuInflater.inflate(R.menu.menu_detail, menu)
+            true
+        } else {
+            menuInflater.inflate(R.menu.menu_downloads, menu)
+            true
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -248,7 +253,7 @@ class ImageDetailActivity : AppCompatActivity() {
                 true
             }
             android.R.id.home -> {
-                onBackPressed()
+                finish()
                 true
             }
             else -> super.onOptionsItemSelected(item)

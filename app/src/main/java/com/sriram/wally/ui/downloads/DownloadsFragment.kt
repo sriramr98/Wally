@@ -43,6 +43,8 @@ class DownloadsFragment : Fragment() {
         mViewModel.getAllDownloadedImages().observe(this, Observer {
             if (it != null && it.isNotEmpty()) {
                 mAdapter.setImages(ArrayList(it))
+            } else {
+                tv_error.text = "No photos downloaded. Please download some images and come back"
             }
         })
 
