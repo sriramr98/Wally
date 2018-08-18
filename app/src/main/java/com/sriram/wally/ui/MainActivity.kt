@@ -1,47 +1,61 @@
 package com.sriram.wally.ui
 
 import android.Manifest
+import android.app.SearchManager
+import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.SearchView
 import com.github.florent37.runtimepermission.RuntimePermission.askPermission
 import com.sriram.wally.R
 import com.sriram.wally.ui.collections.CollectionsFragment
 import com.sriram.wally.ui.downloads.DownloadsFragment
 import com.sriram.wally.ui.home.PhotosListFragment
+import com.sriram.wally.ui.search.SearchActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
+import timber.log.Timber
+import android.support.v4.view.MenuItemCompat.getActionView
+
+
 
 class MainActivity : AppCompatActivity() {
 
-    private var currentFragmentTag = "HOME"
+    private var currentFragmentTag = HOME_FRAGMENT
+
+    companion object {
+        const val HOME_FRAGMENT = "HOME"
+        const val COLLECTIONS_FRAGMENT = "COLLECTIONS"
+        const val DOWNLOADS_FRAGMENT = "DOWNLOADS"
+    }
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_home -> {
-                if (currentFragmentTag != "HOME") {
+                if (currentFragmentTag != HOME_FRAGMENT) {
                     supportActionBar?.setTitle(R.string.title_home)
                     PhotosListFragment.instantiate().show(true, PhotosListFragment.TAG)
-                    currentFragmentTag = "HOME"
+                    currentFragmentTag = HOME_FRAGMENT
                 }
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_collections -> {
-                if (currentFragmentTag != "COLLECTIONS") {
+                if (currentFragmentTag != COLLECTIONS_FRAGMENT) {
                     supportActionBar?.setTitle(R.string.title_collections)
                     CollectionsFragment.instantiate().show(true, CollectionsFragment.TAG)
-                    currentFragmentTag = "COLLECTIONS"
+                    currentFragmentTag = COLLECTIONS_FRAGMENT
                 }
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_downloads -> {
-                if (currentFragmentTag != "DOWNLOADS") {
+                if (currentFragmentTag != DOWNLOADS_FRAGMENT) {
                     supportActionBar?.setTitle(R.string.title_downloads)
                     DownloadsFragment.instantiate().show(true, DownloadsFragment.TAG)
-                    currentFragmentTag = "DOWNLOADS"
+                    currentFragmentTag = DOWNLOADS_FRAGMENT
                 }
                 return@OnNavigationItemSelectedListener true
             }
@@ -70,6 +84,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
+
+        // Get the SearchView and set the searchable configuration
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchView = menu?.findItem(R.id.action_search)?.actionView as SearchView
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        searchView.setIconifiedByDefault(false) // Do not iconify the widget; expand it by default
+
         return true
     }
 
@@ -94,4 +116,11 @@ class MainActivity : AppCompatActivity() {
         transaction.commit()
     }
 
+    override fun onSearchRequested(): Boolean {
+        Timber.i("Search Requested")
+        val data = Bundle()
+        data.putString(SearchActivity.CURRENT_CONTEXT, currentFragmentTag)
+        startSearch(null, false, data, false)
+        return true
+    }
 }
