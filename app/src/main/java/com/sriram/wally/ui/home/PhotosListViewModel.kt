@@ -15,7 +15,7 @@ class PhotosListViewModel(val networkRepo: NetworkRepo) : ViewModel() {
 
     private val disposable = CompositeDisposable()
     private val photosData = MutableLiveData<NetworkResponse<PhotoListResponse>>()
-    private var page = -1
+    private var page = 0
 
     init {
         refresh()
