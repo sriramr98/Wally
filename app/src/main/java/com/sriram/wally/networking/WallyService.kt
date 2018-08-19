@@ -1,9 +1,7 @@
 package com.sriram.wally.networking
 
+import com.sriram.wally.models.response.*
 import com.sriram.wally.models.response.Collection
-import com.sriram.wally.models.response.DownloadResponse
-import com.sriram.wally.models.response.PhotoDetailResponse
-import com.sriram.wally.models.response.PhotoListResponse
 import io.reactivex.Observable
 import io.reactivex.Single
 import retrofit2.Call
@@ -14,7 +12,7 @@ import retrofit2.http.Query
 interface WallyService {
 
     @GET("photos")
-    fun getAllPhotos(@Query("page") page: Int, @Query("per_page") perPage: Int, @Query("order_by") order: String): Single<List<PhotoListResponse>>
+    fun getAllPhotos(@Query("page") page: Int, @Query("per_page") perPage: Int, @Query("order_by") order: String): Single<List<Photo>>
 
     @GET("photos/{id}")
     fun getDetailOfPhoto(@Path("id") id: String): Single<PhotoDetailResponse>
@@ -26,6 +24,12 @@ interface WallyService {
     fun getAllCollections(@Query("page") page: Int): Observable<List<Collection>>
 
     @GET("/collections/{id}/photos")
-    fun getAllPhotosOfCollection(@Path("id") id: String, @Query("page") page: Int): Single<List<PhotoListResponse>>
+    fun getAllPhotosOfCollection(@Path("id") id: String, @Query("page") page: Int): Single<List<Photo>>
+
+    @GET("/search/photos")
+    fun searchPhotos(@Query("query") query: String, @Query("page") page: Int = 1): Single<PhotoSearchResponse>
+
+    @GET("/search/collections")
+    fun searchCollections(@Query("query") query: String, @Query("page") page: Int = 1): Single<CollectionSearchResponse>
 
 }

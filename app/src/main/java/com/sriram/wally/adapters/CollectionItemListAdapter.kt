@@ -7,14 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import com.sriram.wally.R
-import com.sriram.wally.models.response.PhotoListResponse
+import com.sriram.wally.models.response.Photo
 import com.sriram.wally.utils.Logger
 import kotlinx.android.synthetic.main.item_image.view.*
 
 class CollectionItemListAdapter(context: Context, val picasso: Picasso) : RecyclerView.Adapter<CollectionItemListAdapter.ViewHolder>() {
 
     private val inflater = LayoutInflater.from(context)
-    private val images = arrayListOf<PhotoListResponse>()
+    private val images = arrayListOf<Photo>()
     private var mListener: PhotoListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,7 +30,7 @@ class CollectionItemListAdapter(context: Context, val picasso: Picasso) : Recycl
         holder.bind(images[position])
     }
 
-    fun setImages(images: ArrayList<PhotoListResponse>) {
+    fun setImages(images: ArrayList<Photo>) {
         Logger.e("Images set ${images.size}")
         this.images.addAll(images)
         notifyDataSetChanged()
@@ -41,7 +41,7 @@ class CollectionItemListAdapter(context: Context, val picasso: Picasso) : Recycl
     }
 
     interface PhotoListener {
-        fun onPhotoClicked(photo: PhotoListResponse)
+        fun onPhotoClicked(photo: Photo)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -52,7 +52,7 @@ class CollectionItemListAdapter(context: Context, val picasso: Picasso) : Recycl
             }
         }
 
-        fun bind(image: PhotoListResponse) {
+        fun bind(image: Photo) {
             Logger.e(image.urls?.regular ?: "No regular image")
             picasso.load(image.urls?.regular)
                     .error(android.R.color.black)

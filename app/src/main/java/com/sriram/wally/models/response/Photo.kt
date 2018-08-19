@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class PhotoListResponse(
+data class Photo(
 
         @field:SerializedName("color")
         val color: String? = null,
