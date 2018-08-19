@@ -18,9 +18,7 @@ import com.sriram.wally.ui.home.PhotosListFragment
 import com.sriram.wally.ui.search.SearchActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
-import timber.log.Timber
-import android.support.v4.view.MenuItemCompat.getActionView
-
+import android.content.Intent
 
 
 class MainActivity : AppCompatActivity() {
@@ -78,7 +76,8 @@ class MainActivity : AppCompatActivity() {
 
         // just ask for permission once. Do not need to handle rejection as the specific permissions
         // will again be asked when required
-        askPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.SET_WALLPAPER).ask()
+        askPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.SET_WALLPAPER).ask()
 
     }
 
@@ -116,11 +115,20 @@ class MainActivity : AppCompatActivity() {
         transaction.commit()
     }
 
-    override fun onSearchRequested(): Boolean {
-        Timber.i("Search Requested")
-        val data = Bundle()
-        data.putString(SearchActivity.CURRENT_CONTEXT, currentFragmentTag)
-        startSearch(null, false, data, false)
-        return true
+    override fun startActivity(intent: Intent) {
+        // Used to pass parameters to Search Activity
+        if (Intent.ACTION_SEARCH == intent.action) {
+            intent.putExtra(SearchActivity.CURRENT_CONTEXT, currentFragmentTag)
+        }
+
+        super.startActivity(intent)
+    }
+
+    override fun startActivity(intent: Intent?, options: Bundle?) {
+        // Used to pass parameters to Search Activity
+        if (Intent.ACTION_SEARCH == intent?.action) {
+            intent.putExtra(SearchActivity.CURRENT_CONTEXT, currentFragmentTag)
+        }
+        super.startActivity(intent, options)
     }
 }

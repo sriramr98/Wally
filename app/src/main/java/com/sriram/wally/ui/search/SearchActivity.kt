@@ -24,14 +24,13 @@ class SearchActivity : AppCompatActivity() {
         val intent = intent
         if (Intent.ACTION_SEARCH == intent.action) {
             val query = intent.getStringExtra(SearchManager.QUERY)
-            val bundle = intent.getBundleExtra(SearchManager.APP_DATA)
-            if (bundle != null) {
-                val currentFragment = bundle.getString(CURRENT_CONTEXT)
-                Timber.i("Search with tag $currentFragment")
-                search(query.trim(), currentFragment)
+            val extra = intent.getStringExtra(CURRENT_CONTEXT)
+            if (extra == null) {
+                Timber.i("Search without extra")
+                search(query)
             } else {
-                Timber.i("Search without tag")
-                search(query.trim())
+                Timber.i("Search with extra")
+                search(query, extra)
             }
         }
     }
