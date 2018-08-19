@@ -6,12 +6,21 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.view.MenuItem
 import com.sriram.wally.R
 import com.sriram.wally.adapters.CollectionsListAdapter
 import com.sriram.wally.adapters.PhotoListAdapter
 import com.sriram.wally.models.NetworkStatus
+import com.sriram.wally.models.response.Collection
+import com.sriram.wally.models.response.Photo
 import com.sriram.wally.ui.MainActivity
+import com.sriram.wally.ui.collections.CollectionsDetailActivity
+import com.sriram.wally.ui.detail.ImageDetailActivity
+import com.sriram.wally.utils.EndlessScrollRvListener
 import kotlinx.android.synthetic.main.activity_search.*
+import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.startActivity
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
 
@@ -104,5 +113,35 @@ class SearchActivity : AppCompatActivity() {
             rv_images.adapter = mCollectionsAdapter
         }
 
+        rv_images.addOnScrollListener(object : EndlessScrollRvListener(layoutManager) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
+                mViewModel.refreshData()
+            }
+        })
+
+        layout_refresh.setOnRefreshListener { mViewModel.resetData() }
+
+        mPhotosAdapter.onItemClickListener(object : PhotoListAdapter.PhotoListener {
+            override fun onPhotoClicked(photo: Photo) {
+                val intent = intentFor<ImageDetailActivity>(ImageDetailActivity.PHOTO_EXTRA to photo)
+                intent.action = ImageDetailActivity.ACTION_IMAGE_URL
+                startActivity(intent)
+            }
+        })
+
+        mCollectionsAdapter.onItemClickListener(object : CollectionsListAdapter.PhotoListener {
+            override fun onPhotoClicked(photo: Collection) {
+                startActivity<CollectionsDetailActivity>(CollectionsDetailActivity.TAG to photo)
+            }
+
+        })
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == android.R.id.home) {
+            onBackPressed()
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

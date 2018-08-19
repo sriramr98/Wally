@@ -32,13 +32,23 @@ class SearchViewModel(private val networkRepo: NetworkRepo) : ViewModel() {
         refreshData()
     }
 
-    private fun refreshData() {
+    fun refreshData() {
         ++page
         if (searchType == SearchActivity.SEARCH_PHOTOS) {
             searchPhotos()
         } else {
             searchCollection()
         }
+    }
+
+    fun resetData() {
+        page = 0
+        if (searchType == SearchActivity.SEARCH_PHOTOS) {
+            imagesData.value = NetworkResponse(NetworkStatus.LOADING)
+        } else {
+            collectionsData.value = NetworkResponse(NetworkStatus.LOADING)
+        }
+        refreshData()
     }
 
     private fun searchCollection() {
