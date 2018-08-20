@@ -6,17 +6,18 @@ This application contains some of the most beautiful and artistic photos taken b
 
 # Features :
 
-* Browse more than a 100,000 photos every day.
-* Simplistic Material Design
+- Browse more than a 100,000 photos every day.
+- Simplistic Material Design
+- View individual photos
+- Set photo as a wallpaper
+- Download photo
+- Photo Collections
+- Search Photos and Collections
 
 # Upcoming Features :
 
-* View individual photos
-* Set photo as a wallpaper
-* Set photo as lock screen
-* Download photo
-* Dark Theme
-* Photo Collections
+- Set photo as lock screen
+- Dark Theme
 
 # Screenshots:
 
