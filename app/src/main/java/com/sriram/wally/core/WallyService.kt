@@ -1,7 +1,7 @@
 package com.sriram.wally.core
 
 import android.app.IntentService
-import android.app.Service
+import android.app.PendingIntent
 import android.app.WallpaperManager
 import android.content.Intent
 import android.os.Build
@@ -10,15 +10,12 @@ import com.squareup.picasso.Picasso
 import com.sriram.wally.R
 import com.sriram.wally.db.ImagesRepo
 import com.sriram.wally.networking.NetworkRepo
+import com.sriram.wally.ui.MainActivity
 import com.sriram.wally.utils.Constants
 import com.sriram.wally.utils.saveToFile
 import org.jetbrains.anko.notificationManager
 import org.koin.android.ext.android.inject
 import java.net.SocketTimeoutException
-import android.content.Context.NOTIFICATION_SERVICE
-import android.app.NotificationManager
-import android.app.NotificationChannel
-import android.content.Context
 
 
 class WallyService : IntentService(NAME) {
@@ -61,6 +58,18 @@ class WallyService : IntentService(NAME) {
                 .setContentTitle(getString(R.string.downloading_image_title))
                 .setContentText(getString(R.string.downloading))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
+
+        if (!setWallpaper) {
+            val notifyIntent = Intent(this, MainActivity::class.java)
+            // Set the Activity to start in a new, empty task
+            notifyIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            notifyIntent.putExtra(MainActivity.EXTRAS_SHOW_DOWNLOAD, true)
+            // Create the PendingIntent
+            val notifyPendingIntent = PendingIntent.getActivity(
+                    this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
+            )
+            mBuilder.setContentIntent(notifyPendingIntent)
+        }
 
         mBuilder.setProgress(0, 0, true).setOngoing(true)
         notificationManager.notify(DOWNLOAD_NOTIFICATION_ID, mBuilder.build())

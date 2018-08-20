@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         const val HOME_FRAGMENT = "HOME"
         const val COLLECTIONS_FRAGMENT = "COLLECTIONS"
         const val DOWNLOADS_FRAGMENT = "DOWNLOADS"
+        const val EXTRAS_SHOW_DOWNLOAD = "EXTRAS_SHOW_DOWNLOAD"
     }
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -71,7 +72,16 @@ class MainActivity : AppCompatActivity() {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         if (savedInstanceState == null) {
-            PhotosListFragment.instantiate().show()
+            val isDownloads = intent.getBooleanExtra(EXTRAS_SHOW_DOWNLOAD, false)
+            currentFragmentTag = if (isDownloads) {
+                DownloadsFragment.instantiate().show(false)
+                 supportActionBar?.setTitle(R.string.title_downloads)
+                DOWNLOADS_FRAGMENT
+            } else {
+                PhotosListFragment.instantiate().show()
+                supportActionBar?.setTitle(R.string.title_home)
+                HOME_FRAGMENT
+            }
         }
 
         // just ask for permission once. Do not need to handle rejection as the specific permissions
