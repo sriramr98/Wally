@@ -22,24 +22,29 @@ This application contains some of the most beautiful and artistic photos taken b
 # Screenshots:
 
 - Main
+
   <img src="https://github.com/sriramr98/Wallly/blob/dev/Screenshots/Screenshot_1.jpg" width="300" />
 
 ---
 
 - Collections
+
   <img src="https://github.com/sriramr98/Wallly/blob/dev/Screenshots/Screenshot_2.jpg" width="300" />
 
 ---
 
 - Downloads
+
   <img src="https://github.com/sriramr98/Wallly/blob/dev/Screenshots/Screenshot_3.jpg" width="300" />
 
 ---
 
 - Single Image
+
   <img src="https://github.com/sriramr98/Wallly/blob/dev/Screenshots/Screenshot_4.jpg" width="300" />
 
 ---
 
 - Set Wallpaper / Download Image
+
   <img src="https://github.com/sriramr98/Wallly/blob/dev/Screenshots/Screenshot_5.jpg" width="300" />
