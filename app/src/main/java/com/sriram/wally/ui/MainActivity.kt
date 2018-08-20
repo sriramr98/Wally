@@ -20,8 +20,10 @@ import com.sriram.wally.ui.collections.CollectionsFragment
 import com.sriram.wally.ui.downloads.DownloadsFragment
 import com.sriram.wally.ui.home.PhotosListFragment
 import com.sriram.wally.ui.search.SearchActivity
+import com.sriram.wally.ui.settings.SettingsActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
 
@@ -140,7 +142,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
             R.id.action_settings -> {
-                toast("Settings will be available soon").show()
+                startActivity<SettingsActivity>()
                 true
             }
             else -> super.onOptionsItemSelected(item)

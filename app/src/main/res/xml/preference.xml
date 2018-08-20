@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="@string/regular_wallpaper"
+        android:summary="@string/set_wallpaper_every_day"
+        android:title="@string/random_wallpaper" />
+</PreferenceScreen>
