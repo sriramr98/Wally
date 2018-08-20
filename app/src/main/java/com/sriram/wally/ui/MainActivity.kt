@@ -1,12 +1,16 @@
 package com.sriram.wally.ui
 
 import android.Manifest
+import android.app.Activity
 import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import com.github.florent37.runtimepermission.RuntimePermission.askPermission
@@ -75,7 +79,7 @@ class MainActivity : AppCompatActivity() {
             val isDownloads = intent.getBooleanExtra(EXTRAS_SHOW_DOWNLOAD, false)
             currentFragmentTag = if (isDownloads) {
                 DownloadsFragment.instantiate().show(false)
-                 supportActionBar?.setTitle(R.string.title_downloads)
+                supportActionBar?.setTitle(R.string.title_downloads)
                 DOWNLOADS_FRAGMENT
             } else {
                 PhotosListFragment.instantiate().show()
@@ -90,6 +94,8 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.SET_WALLPAPER).ask()
 
         search_view.setHint("Search Wally")
+        search_view.setVoiceSearch(true)
+        search_view.setVoiceIcon(ContextCompat.getDrawable(this, R.drawable.ic_voice))
         search_view.setOnQueryTextListener(object : MaterialSearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query == null) return false
@@ -105,6 +111,21 @@ class MainActivity : AppCompatActivity() {
 
         })
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == MaterialSearchView.REQUEST_VOICE && resultCode == Activity.RESULT_OK) {
+            val matches = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+            if (matches != null && matches.size > 0) {
+                val searchWrd = matches[0]
+                if (!TextUtils.isEmpty(searchWrd)) {
+                    search_view.setQuery(searchWrd, false)
+                }
+            }
+
+            return
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
