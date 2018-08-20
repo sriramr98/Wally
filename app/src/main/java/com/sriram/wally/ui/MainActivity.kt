@@ -2,23 +2,23 @@ package com.sriram.wally.ui
 
 import android.Manifest
 import android.app.SearchManager
-import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.SearchView
 import com.github.florent37.runtimepermission.RuntimePermission.askPermission
+import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.sriram.wally.R
 import com.sriram.wally.ui.collections.CollectionsFragment
 import com.sriram.wally.ui.downloads.DownloadsFragment
 import com.sriram.wally.ui.home.PhotosListFragment
 import com.sriram.wally.ui.search.SearchActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.toast
-import android.content.Intent
 
 
 class MainActivity : AppCompatActivity() {
@@ -79,17 +79,29 @@ class MainActivity : AppCompatActivity() {
         askPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.SET_WALLPAPER).ask()
 
+        search_view.setHint("Search Wally")
+        search_view.setOnQueryTextListener(object : MaterialSearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query == null) return false
+                val searchIntent = intentFor<SearchActivity>(SearchActivity.CURRENT_CONTEXT to currentFragmentTag, SearchManager.QUERY to query)
+                searchIntent.action = Intent.ACTION_SEARCH
+                startActivity(searchIntent)
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+
+        })
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
 
-        // Get the SearchView and set the searchable configuration
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchView = menu?.findItem(R.id.action_search)?.actionView as SearchView
-
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        searchView.setIconifiedByDefault(false) // Do not iconify the widget; expand it by default
+        val item = menu?.findItem(R.id.action_search)
+        search_view.setMenuItem(item)
 
         return true
     }
@@ -115,20 +127,12 @@ class MainActivity : AppCompatActivity() {
         transaction.commit()
     }
 
-    override fun startActivity(intent: Intent) {
-        // Used to pass parameters to Search Activity
-        if (Intent.ACTION_SEARCH == intent.action) {
-            intent.putExtra(SearchActivity.CURRENT_CONTEXT, currentFragmentTag)
+    override fun onBackPressed() {
+        if (search_view.isSearchOpen) {
+            search_view.closeSearch()
+        } else {
+            super.onBackPressed()
         }
-
-        super.startActivity(intent)
     }
 
-    override fun startActivity(intent: Intent?, options: Bundle?) {
-        // Used to pass parameters to Search Activity
-        if (Intent.ACTION_SEARCH == intent?.action) {
-            intent.putExtra(SearchActivity.CURRENT_CONTEXT, currentFragmentTag)
-        }
-        super.startActivity(intent, options)
-    }
 }
