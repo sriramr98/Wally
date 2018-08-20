@@ -12,6 +12,7 @@ import com.sriram.wally.ui.collections.CollectionsViewModel
 import com.sriram.wally.ui.detail.ImageDetailViewModel
 import com.sriram.wally.ui.downloads.DownloadsViewModel
 import com.sriram.wally.ui.home.PhotosListViewModel
+import com.sriram.wally.ui.search.SearchViewModel
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module.applicationContext
@@ -66,4 +67,9 @@ val modules = applicationContext {
      */
     viewModel { CollectionsDetailViewModel(get()) }
     factory { CollectionItemListAdapter(androidApplication(), get()) }
+
+    /**
+     * Modules for SearchActivity
+     */
+    viewModel { SearchViewModel(get()) }
 }

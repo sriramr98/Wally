@@ -73,16 +73,16 @@ class CollectionsFragment : Fragment() {
 
     private fun showSuccess(images: ArrayList<Collection>) {
         toast(images.size.toString())
-        pb_collections.visibility = View.GONE
+        layout_refresh.isRefreshing = false
         mAdpater.setImages(images)
     }
 
     private fun showLoading() {
-        pb_collections.visibility = View.VISIBLE
+        layout_refresh.isRefreshing = true
     }
 
     private fun showFailure() {
-        pb_collections.visibility = View.GONE
+        layout_refresh.isRefreshing = true
         if (isConnectedToNetwork(requireContext())) {
             tv_error.text = "Error retrieving data. Please try again"
         } else {

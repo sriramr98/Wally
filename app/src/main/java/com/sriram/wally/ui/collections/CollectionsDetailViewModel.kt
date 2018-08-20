@@ -5,7 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.sriram.wally.models.NetworkResponse
 import com.sriram.wally.models.NetworkStatus
-import com.sriram.wally.models.response.PhotoListResponse
+import com.sriram.wally.models.response.Photo
 import com.sriram.wally.networking.NetworkRepo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -13,7 +13,7 @@ import io.reactivex.schedulers.Schedulers
 
 class CollectionsDetailViewModel(private val wallyRepo: NetworkRepo) : ViewModel() {
 
-    private val photosData = MutableLiveData<NetworkResponse<PhotoListResponse>>()
+    private val photosData = MutableLiveData<NetworkResponse<Photo>>()
     private val compositeDisposable = CompositeDisposable()
     private var id: String = ""
     private var page = 1
@@ -36,7 +36,7 @@ class CollectionsDetailViewModel(private val wallyRepo: NetworkRepo) : ViewModel
         compositeDisposable.add(disposable)
     }
 
-    fun getPhotos(id: String): LiveData<NetworkResponse<PhotoListResponse>> {
+    fun getPhotos(id: String): LiveData<NetworkResponse<Photo>> {
         if (photosData.value == null) {
             this.id = id
             queryData()

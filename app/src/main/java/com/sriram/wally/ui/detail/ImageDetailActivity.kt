@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso
 import com.sriram.wally.R
 import com.sriram.wally.core.WallyService
 import com.sriram.wally.models.ImageModel
-import com.sriram.wally.models.response.PhotoListResponse
+import com.sriram.wally.models.response.Photo
 import com.sriram.wally.ui.InfoBottomSheet
 import com.sriram.wally.utils.Logger
 import com.sriram.wally.utils.isConnectedToNetwork
@@ -110,7 +110,7 @@ class ImageDetailActivity : AppCompatActivity() {
                 .into(img_photo, onImageLoaded)
     }
 
-    private fun loadImageFromUrl(photo: PhotoListResponse?) {
+    private fun loadImageFromUrl(photo: Photo?) {
 
         mViewModel.loadData(photo?.id!!)
 

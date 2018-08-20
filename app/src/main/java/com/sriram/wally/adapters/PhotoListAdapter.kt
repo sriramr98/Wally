@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import com.sriram.wally.R
-import com.sriram.wally.models.response.PhotoListResponse
+import com.sriram.wally.models.response.Photo
 import com.sriram.wally.utils.DiffCallback
 import com.sriram.wally.utils.Logger
 import kotlinx.android.synthetic.main.item_image.view.*
@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.item_image.view.*
 class PhotoListAdapter(context: Context, val picasso: Picasso) : RecyclerView.Adapter<PhotoListAdapter.ViewHolder>() {
 
     private val inflater = LayoutInflater.from(context)
-    private val images = arrayListOf<PhotoListResponse>()
+    private val images = arrayListOf<Photo>()
     private var mListener: PhotoListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,7 +31,7 @@ class PhotoListAdapter(context: Context, val picasso: Picasso) : RecyclerView.Ad
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(images[position])
 
-    fun setImages(images: ArrayList<PhotoListResponse>) {
+    fun setImages(images: ArrayList<Photo>) {
         Logger.e("Images set")
         val callback = DiffCallback(this.images, images)
         val result = DiffUtil.calculateDiff(callback)
@@ -45,12 +45,12 @@ class PhotoListAdapter(context: Context, val picasso: Picasso) : RecyclerView.Ad
         mListener = listener
     }
 
-    fun getImages(): ArrayList<PhotoListResponse> {
+    fun getImages(): ArrayList<Photo> {
         return images
     }
 
     interface PhotoListener {
-        fun onPhotoClicked(photo: PhotoListResponse)
+        fun onPhotoClicked(photo: Photo)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -61,7 +61,7 @@ class PhotoListAdapter(context: Context, val picasso: Picasso) : RecyclerView.Ad
             }
         }
 
-        fun bind(image: PhotoListResponse) {
+        fun bind(image: Photo) {
             Logger.e(image.urls?.regular ?: "No regular image")
 
             val placeholder = ColorDrawable(Color.parseColor(image.color))
