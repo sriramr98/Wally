@@ -111,5 +111,8 @@
     <string name="search_title">Search</string>
     <string name="set_wallpaper_every_day">Set a random wallpaper every day</string>
     <string name="random_wallpaper">Random Wallpaper</string>
-    <string name="regular_wallpaper">regular-wallpaper</string>
+    <string name="key_regular_wallpaper">regular-wallpaper</string>
+    <string name="downloading_wallpaper_today">Downloading a new image for today\'s wallpaper.</string>
+    <string name="wallpaper_complete">Wallpaper Set</string>
+    <string name="wallpaper_complete_text">Today\'s wallpaper set successfully. We hope you enjoy it</string>
 </resources>

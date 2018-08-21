@@ -37,4 +37,8 @@ class NetworkRepo(private val wallyService: WallyService) {
         return wallyService.searchCollections(query, page)
     }
 
+    fun getRandomWallpape(): Call<Photo> {
+        return wallyService.getRandomImage()
+    }
+
 }

@@ -65,7 +65,7 @@ fun getPicasso(context: Context, downloader: OkHttp3Downloader): Picasso {
     val cacheSize = availableMemmory / 8
     return Picasso.Builder(context)
             .downloader(downloader)
-            .memoryCache(LruCache(cacheSize))
+//            .memoryCache(LruCache(cacheSize))
             .loggingEnabled(true)
             .build()
 

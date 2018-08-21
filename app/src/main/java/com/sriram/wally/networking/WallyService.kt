@@ -32,4 +32,6 @@ interface WallyService {
     @GET("/search/collections")
     fun searchCollections(@Query("query") query: String, @Query("page") page: Int = 1): Single<CollectionSearchResponse>
 
+    @GET("/photos/random")
+    fun getRandomImage(): Call<Photo>
 }
