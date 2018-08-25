@@ -30,6 +30,9 @@ class WallyService : IntentService(NAME) {
         const val EXTRA_IMAGE_ID = "image-id"
         const val DOWNLOAD_NOTIFICATION_ID = 2334
         const val EXTRA_SET_WALLPAPER = "set-wallpaper"
+
+        const val ACTION_SCHEDULE_WALLPAPER = "action-schedule-wallpaper"
+
     }
 
     override fun onCreate() {
@@ -47,7 +50,18 @@ class WallyService : IntentService(NAME) {
     override fun onHandleIntent(intent: Intent?) {
         if (intent?.action == ACTION_DOWNLOAD_IMAGE) {
             downloadImage(intent.getStringExtra(EXTRA_IMAGE_ID), intent.getBooleanExtra(EXTRA_SET_WALLPAPER, false))
+        } else if (intent?.action == ACTION_SCHEDULE_WALLPAPER) {
+            scheduleWallpaper()
         }
+    }
+
+    private fun scheduleWallpaper() {
+        val mBuilder = NotificationCompat.Builder(this, Constants.IMAGE_DOWNLOAD_CHANNEL)
+                .setSmallIcon(R.drawable.ic_download)
+                .setContentTitle("Daily wallpaper")
+                .setContentText("Hey here is your daily wallpaper being fired at 9AM")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+        notificationManager.notify(DOWNLOAD_NOTIFICATION_ID, mBuilder.build())
     }
 
     private fun downloadImage(id: String, setWallpaper: Boolean = false) {

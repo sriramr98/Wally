@@ -1,12 +1,18 @@
 package com.sriram.wally.ui.settings
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceFragment
 import androidx.work.*
 import com.sriram.wally.R
+import com.sriram.wally.core.AlarmReciever
 import com.sriram.wally.core.RandomWallpaperWorker
 import timber.log.Timber
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -27,22 +33,39 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
         val shouldScheduleJob = pref.getBoolean(key, false)
         if (shouldScheduleJob) {
             // schedule a new job
-            val jobConstraints = Constraints.Builder()
-                    .setRequiresBatteryNotLow(true)
-                    .setRequiredNetworkType(NetworkType.CONNECTED)
-                    .build()
+//            val jobConstraints = Constraints.Builder()
+//                    .setRequiresBatteryNotLow(true)
+//                    .setRequiredNetworkType(NetworkType.CONNECTED)
+//                    .build()
+//
+//            val randomWallpaperJob = PeriodicWorkRequestBuilder<RandomWallpaperWorker>(PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS) // 15 minutes
+//                    .addTag(TAG_WALLPAPER_WORK)
+//                    .setConstraints(jobConstraints)
+//                    .build()
+//
+//            WorkManager.getInstance().enqueue(randomWallpaperJob)
 
-            val randomWallpaperJob = PeriodicWorkRequestBuilder<RandomWallpaperWorker>(PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS) // 15 minutes
-                    .addTag(TAG_WALLPAPER_WORK)
-                    .setConstraints(jobConstraints)
-                    .build()
+            val calendar: Calendar = Calendar.getInstance().apply {
+                timeInMillis = System.currentTimeMillis()
+                set(Calendar.HOUR_OF_DAY, 9)
+            }
 
-            WorkManager.getInstance().enqueue(randomWallpaperJob)
+            val alarmMgr = activity.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val alarmIntent = Intent(activity, AlarmReciever::class.java).let { intent ->
+                PendingIntent.getBroadcast(activity, 0, intent, 0)
+            }
 
-            val id = randomWallpaperJob.id.toString()
+            alarmMgr.setInexactRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    AlarmManager.INTERVAL_DAY,
+                    alarmIntent
+            )
 
-            pref.edit().putString(KEY_RANDOM_WALLPAPER_JOB, id).apply()
-            Timber.i("Started job with ID $id")
+//            val id = randomWallpaperJob.id.toString()
+
+//            pref.edit().putString(KEY_RANDOM_WALLPAPER_JOB, id).apply()
+//            Timber.i("Started job with ID $id")
 
         } else {
             // cancel the existing job
