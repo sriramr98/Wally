@@ -45,22 +45,16 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
 //
 //            WorkManager.getInstance().enqueue(randomWallpaperJob)
 
-            val calendar: Calendar = Calendar.getInstance().apply {
-                timeInMillis = System.currentTimeMillis()
-                set(Calendar.HOUR_OF_DAY, 9)
-            }
+            val calendar = Calendar.getInstance()
 
-            val alarmMgr = activity.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val alarmIntent = Intent(activity, AlarmReciever::class.java).let { intent ->
-                PendingIntent.getBroadcast(activity, 0, intent, 0)
-            }
-
-            alarmMgr.setInexactRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    AlarmManager.INTERVAL_DAY,
-                    alarmIntent
-            )
+            calendar.set(Calendar.HOUR_OF_DAY, 9) // For 1 PM or 2 PM
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            val pi = PendingIntent.getBroadcast(activity, 0,
+                    Intent(activity, AlarmReciever::class.java), PendingIntent.FLAG_UPDATE_CURRENT)
+            val am = activity.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis,
+                    AlarmManager.INTERVAL_DAY, pi)
 
 //            val id = randomWallpaperJob.id.toString()
 

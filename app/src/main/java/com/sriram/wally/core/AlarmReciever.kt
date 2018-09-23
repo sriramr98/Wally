@@ -8,9 +8,9 @@ import org.jetbrains.anko.intentFor
 class AlarmReciever: BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        val serviceIntent = context?.intentFor<WallyService>()
-        serviceIntent?.action = WallyService.ACTION_SCHEDULE_WALLPAPER
-        context?.startService(serviceIntent)
+        val randomWallPaperIntent = context?.intentFor<WallyService>()
+        randomWallPaperIntent?.action = WallyService.ACTION_RANDOM_WALLPAPER
+        context?.startService(randomWallPaperIntent)
     }
 
 }

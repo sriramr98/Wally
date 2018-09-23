@@ -6,6 +6,10 @@ import android.app.WallpaperManager
 import android.content.Intent
 import android.os.Build
 import android.support.v4.app.NotificationCompat
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.squareup.picasso.Picasso
 import com.sriram.wally.R
 import com.sriram.wally.db.ImagesRepo
@@ -32,6 +36,7 @@ class WallyService : IntentService(NAME) {
         const val EXTRA_SET_WALLPAPER = "set-wallpaper"
 
         const val ACTION_SCHEDULE_WALLPAPER = "action-schedule-wallpaper"
+        const val ACTION_RANDOM_WALLPAPER = "action-random-wallpaper"
 
     }
 
@@ -52,7 +57,19 @@ class WallyService : IntentService(NAME) {
             downloadImage(intent.getStringExtra(EXTRA_IMAGE_ID), intent.getBooleanExtra(EXTRA_SET_WALLPAPER, false))
         } else if (intent?.action == ACTION_SCHEDULE_WALLPAPER) {
             scheduleWallpaper()
+        } else if (intent?.action == ACTION_RANDOM_WALLPAPER) {
+            scheduleRandomWallpaper()
         }
+    }
+
+    private fun scheduleRandomWallpaper() {
+        val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+        val workRequest = OneTimeWorkRequestBuilder<RandomWallpaperWorker>()
+                .setConstraints(constraints)
+                .build()
+        WorkManager.getInstance().enqueue(workRequest)
     }
 
     private fun scheduleWallpaper() {

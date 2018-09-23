@@ -58,7 +58,8 @@ class PhotosListViewModel(val networkRepo: NetworkRepo) : ViewModel() {
         refresh()
     }
 
-    fun getPhotosData(): LiveData<NetworkResponse<Photo>> {
+    fun
+            getPhotosData(): LiveData<NetworkResponse<Photo>> {
         return photosData
     }
 

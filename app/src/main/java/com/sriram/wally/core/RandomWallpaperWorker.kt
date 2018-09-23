@@ -7,6 +7,7 @@ import com.squareup.picasso.Picasso
 import com.sriram.wally.R
 import com.sriram.wally.networking.NetworkRepo
 import com.sriram.wally.utils.Constants
+import com.sriram.wally.utils.SharedPrefUtils
 import org.jetbrains.anko.notificationManager
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -34,6 +35,7 @@ class RandomWallpaperWorker : Worker(), KoinComponent {
         applicationContext.notificationManager.notify(WALLPAPER_NOTIFICATION_ID, notificationBuilder.build())
 
         try {
+            SharedPrefUtils.setIsRandomWallpaperScheduled(true)
             val response = wallyRepo.getRandomWallpape().execute()
 
             if (response == null || !response.isSuccessful || response.body() == null) {
