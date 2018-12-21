@@ -1,16 +1,16 @@
 package com.sriram.wally
 
 import android.app.Application
-import android.os.Environment
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
+import com.facebook.stetho.Stetho
+import com.jakewharton.threetenabp.AndroidThreeTen
 import com.sriram.wally.di.modules
-import com.sriram.wally.utils.Logger
+import com.sriram.wally.utils.Constants
 import com.sriram.wally.utils.SharedPrefUtils
 import org.koin.android.ext.android.startKoin
 import timber.log.Timber
-import android.app.NotificationManager
-import android.app.NotificationChannel
-import android.os.Build
-import com.sriram.wally.utils.Constants
 
 
 class WallyApplication : Application() {
@@ -25,6 +25,8 @@ class WallyApplication : Application() {
         Timber.plant(Timber.DebugTree())
         createNotificationChannel()
 
+        Stetho.initializeWithDefaults(this)
+        AndroidThreeTen.init(this)
     }
 
     private fun createNotificationChannel() {

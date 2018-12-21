@@ -2,6 +2,7 @@ package com.sriram.wally.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.sriram.wally.R
 import org.jetbrains.anko.defaultSharedPreferences
 
 object SharedPrefUtils {
@@ -19,7 +20,8 @@ object SharedPrefUtils {
         return mPrefs.getString(PHOTOS_ORDER, Constants.PHOTOS_ORDER_LATEST)
     }
 
-    fun setIsRandomWallpaperScheduled(b: Boolean) {
-        mPrefs.edit().putBoolean(KEY_RANDOM_WALLPAPER_SCHEDULED, b).apply()
+    fun getIsRandomWallpaperScheduled(context: Context): Boolean {
+        return mPrefs.getBoolean(context.getString(R.string.key_regular_wallpaper), false)
     }
+
 }

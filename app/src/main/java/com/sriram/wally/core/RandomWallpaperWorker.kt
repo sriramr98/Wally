@@ -35,7 +35,7 @@ class RandomWallpaperWorker : Worker(), KoinComponent {
         applicationContext.notificationManager.notify(WALLPAPER_NOTIFICATION_ID, notificationBuilder.build())
 
         try {
-            SharedPrefUtils.setIsRandomWallpaperScheduled(true)
+//            SharedPrefUtils.setIsRandomWallpaperScheduled(true)
             val response = wallyRepo.getRandomWallpape().execute()
 
             if (response == null || !response.isSuccessful || response.body() == null) {
